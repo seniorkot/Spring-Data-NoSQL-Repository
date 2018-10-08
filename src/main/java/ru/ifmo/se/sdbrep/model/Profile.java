@@ -29,7 +29,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -40,7 +44,7 @@ import java.util.List;
  * @since 1.0
  */
 @Document(collection = "profiles")
-public class Profile {
+public class Profile implements UserDetails {
 
     @Id
     private String id;
@@ -55,11 +59,19 @@ public class Profile {
     private String lastName;
     private String bio;
 
+    private List<GrantedAuthority> authorities;
+
     @DBRef
     private List<Project> projects;
 
     public Profile() {
 
+    }
+
+    public Profile(String username, String password, String[] authorities) {
+        this.username = username;
+        this.password = password;
+        this.authorities = AuthorityUtils.createAuthorityList(authorities);
     }
 
     public String getId() {
@@ -116,5 +128,30 @@ public class Profile {
 
     public void setProjects(List<Project> projects) {
         this.projects = projects;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 }

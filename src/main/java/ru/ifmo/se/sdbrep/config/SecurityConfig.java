@@ -24,9 +24,13 @@
 
 package ru.ifmo.se.sdbrep.config;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import ru.ifmo.se.sdbrep.service.ProfileService;
 
 /**
  * This class is used for Spring Security configuration.<br>
@@ -54,7 +58,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         public static final String ROLE_ADMIN = ROLE_ + ADMIN;
     }
 
-    // TODO: Add UserDetails service
+    @Bean
+    public UserDetailsService mongoUserDetails() {
+        return new ProfileService();
+    }
+
+    /**
+     * Configures {@link UserDetailsService} in application.
+     *
+     * @param auth Authentication Manager Builder
+     * @throws Exception Exception
+     */
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        UserDetailsService userDetailsService = mongoUserDetails();
+        auth.userDetailsService(userDetailsService);
+    }
 
     /**
      * Configures and authorizes HTTP requests.
