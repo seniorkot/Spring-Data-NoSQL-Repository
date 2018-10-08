@@ -25,7 +25,10 @@
 package ru.ifmo.se.sdbrep.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 import ru.ifmo.se.sdbrep.model.Profile;
+
+import java.util.Optional;
 
 /**
  * This interface is used as MongoDB Spring Data repository
@@ -37,4 +40,6 @@ import ru.ifmo.se.sdbrep.model.Profile;
  */
 public interface ProfileRepository extends MongoRepository<Profile, String> {
 
+    Optional<UserDetails> findByUsername(String username);
+    Optional<Profile> findByUsernameAndPassword(String username, String password);
 }

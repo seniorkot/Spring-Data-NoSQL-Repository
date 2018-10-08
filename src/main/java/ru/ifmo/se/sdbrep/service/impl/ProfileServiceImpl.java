@@ -25,13 +25,17 @@
 package ru.ifmo.se.sdbrep.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.ifmo.se.sdbrep.config.SecurityConfig;
 import ru.ifmo.se.sdbrep.model.Profile;
 import ru.ifmo.se.sdbrep.repository.ProfileRepository;
 import ru.ifmo.se.sdbrep.service.ProfileService;
+
+import java.util.Optional;
 
 /**
  * This class is used as profile app service
@@ -46,40 +50,75 @@ import ru.ifmo.se.sdbrep.service.ProfileService;
 public class ProfileServiceImpl implements ProfileService, UserDetailsService {
 
     @Autowired
-    private ProfileRepository profileRepository;
+    private ProfileRepository mProfileRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return null;
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<UserDetails> profile = mProfileRepository.findByUsername(username);
+        return profile.orElse(null);
     }
 
     @Override
     public Profile getCurrent() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (userDetails instanceof Profile) {
+            return (Profile) userDetails;
+        }
         return null;
+
     }
 
     @Override
     public Profile getById(String id) {
-        return null;
+        Optional<Profile> profile = mProfileRepository.findById(id);
+        return profile.orElse(null);
     }
 
     @Override
     public Profile getByUsername(String username) {
+        UserDetails profile = loadUserByUsername(username);
+        if (profile instanceof Profile) {
+            return (Profile) profile;
+        }
         return null;
     }
 
     @Override
     public Profile getByUsernameAndPassword(String username, String password) {
-        return null;
+        Optional<Profile> profile = mProfileRepository.findByUsernameAndPassword(username, password);
+        return profile.orElse(null);
     }
 
     @Override
     public Profile create(String username, String password) {
+        if (loadUserByUsername(username) == null) {
+            Profile profile = new Profile(username, password, new String[]{SecurityConfig.Roles.ROLE_USER});
+            return mProfileRepository.insert(profile);
+        }
         return null;
     }
 
     @Override
-    public Profile updateCurrent(Profile profile) {
+    public Profile update(Profile profile) {
+        Profile currentProfile = getCurrent();
+        if (currentProfile != null) {
+            if (profile.getUsername() != null && loadUserByUsername(profile.getUsername()) == null) {
+                currentProfile.setUsername(profile.getUsername());
+            }
+            if (profile.getPassword() != null) {
+                currentProfile.setPassword(profile.getPassword());
+            }
+            if (profile.getFirstName() != null) {
+                currentProfile.setFirstName(profile.getFirstName());
+            }
+            if (profile.getLastName() != null) {
+                currentProfile.setLastName(profile.getLastName());
+            }
+            if (profile.getBio() != null) {
+                currentProfile.setBio(profile.getBio());
+            }
+            return mProfileRepository.save(currentProfile);
+        }
         return null;
     }
 }

@@ -87,5 +87,5 @@ public interface ProfileService {
      * @param profile Profile with new data
      * @return Updated profile
      */
-    Profile updateCurrent(Profile profile);
+    Profile update(Profile profile);
 }
