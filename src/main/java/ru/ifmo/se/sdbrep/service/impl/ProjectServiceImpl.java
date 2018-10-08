@@ -25,7 +25,10 @@
 package ru.ifmo.se.sdbrep.service.impl;
 
 import org.springframework.stereotype.Service;
+import ru.ifmo.se.sdbrep.model.Project;
 import ru.ifmo.se.sdbrep.service.ProjectService;
+
+import java.util.List;
 
 /**
  * This class is used as project app service
@@ -38,4 +41,23 @@ import ru.ifmo.se.sdbrep.service.ProjectService;
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
+    @Override
+    public Project getById(String id) {
+        return null;
+    }
+
+    @Override
+    public Project getByProfileUsernameAndName(String username, String name) {
+        return null;
+    }
+
+    @Override
+    public List<Project> getAllCurrent() {
+        return null;
+    }
+
+    @Override
+    public List<Project> getAllByCollaboratorId(String collaborator) {
+        return null;
+    }
 }

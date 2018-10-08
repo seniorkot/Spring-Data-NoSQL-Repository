@@ -46,8 +46,7 @@ public class Project {
     private String name;
     private String info;
 
-    @DBRef
-    private List<Profile> collaborators;
+    private List<String> collaborators;
 
     @DBRef
     private Tree root;
@@ -80,11 +79,11 @@ public class Project {
         this.info = info;
     }
 
-    public List<Profile> getCollaborators() {
+    public List<String> getCollaborators() {
         return collaborators;
     }
 
-    public void setCollaborators(List<Profile> collaborators) {
+    public void setCollaborators(List<String> collaborators) {
         this.collaborators = collaborators;
     }
 

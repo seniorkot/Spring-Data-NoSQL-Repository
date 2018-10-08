@@ -25,7 +25,11 @@
 package ru.ifmo.se.sdbrep.service.impl;
 
 import org.springframework.stereotype.Service;
+import ru.ifmo.se.sdbrep.model.Log;
 import ru.ifmo.se.sdbrep.service.LogService;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * This class is used as log app service
@@ -38,4 +42,38 @@ import ru.ifmo.se.sdbrep.service.LogService;
 @Service
 public class LogServiceImpl implements LogService {
 
+    @Override
+    public Log getById(UUID id) {
+        return null;
+    }
+
+    @Override
+    public List<Log> getAll() {
+        return null;
+    }
+
+    @Override
+    public List<Log> getAll(String profileId, String projectId) {
+        return null;
+    }
+
+    @Override
+    public List<Log> getAllByProfileId(String profileId) {
+        return null;
+    }
+
+    @Override
+    public List<Log> getAllByProjectId(String projectId) {
+        return null;
+    }
+
+    @Override
+    public Log createLog(String message, String profileId) {
+        return null;
+    }
+
+    @Override
+    public Log createLog(String message, String profileId, String projectId) {
+        return null;
+    }
 }

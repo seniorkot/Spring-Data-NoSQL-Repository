@@ -24,24 +24,62 @@
 
 package ru.ifmo.se.sdbrep.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.ifmo.se.sdbrep.model.Profile;
+import ru.ifmo.se.sdbrep.repository.ProfileRepository;
 import ru.ifmo.se.sdbrep.service.ProfileService;
 
 /**
  * This class is used as profile app service
- * that implements {@link ProfileService} methods.
+ * that implements {@link ProfileService} and
+ * {@link UserDetailsService} methods.
  *
  * @author seniorkot
  * @version 1.0
  * @since 1.0
  */
 @Service
-public class ProfileServiceImpl implements ProfileService {
+public class ProfileServiceImpl implements ProfileService, UserDetailsService {
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        return null;
+    }
+
+    @Override
+    public Profile getCurrent() {
+        return null;
+    }
+
+    @Override
+    public Profile getById(String id) {
+        return null;
+    }
+
+    @Override
+    public Profile getByUsername(String username) {
+        return null;
+    }
+
+    @Override
+    public Profile getByUsernameAndPassword(String username, String password) {
+        return null;
+    }
+
+    @Override
+    public Profile create(String username, String password) {
+        return null;
+    }
+
+    @Override
+    public Profile updateCurrent(Profile profile) {
         return null;
     }
 }

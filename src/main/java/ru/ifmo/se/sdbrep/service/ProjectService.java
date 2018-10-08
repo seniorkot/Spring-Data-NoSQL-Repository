@@ -26,6 +26,8 @@ package ru.ifmo.se.sdbrep.service;
 
 import ru.ifmo.se.sdbrep.model.Project;
 
+import java.util.List;
+
 /**
  * This interface contains methods that service must implement
  * to work with {@link Project} entities in the application.
@@ -36,4 +38,8 @@ import ru.ifmo.se.sdbrep.model.Project;
  */
 public interface ProjectService {
 
+    Project getById(String id);
+    Project getByProfileUsernameAndName(String username, String name);
+    List<Project> getAllCurrent();
+    List<Project> getAllByCollaboratorId(String collaborator);
 }
