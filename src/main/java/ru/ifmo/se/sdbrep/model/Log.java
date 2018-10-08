@@ -57,7 +57,7 @@ public class Log {
     private Date time;
 
     public Log() {
-
+        this.time = new Date();
     }
 
     public UUID getId() {

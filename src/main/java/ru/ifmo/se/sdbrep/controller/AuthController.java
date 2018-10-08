@@ -22,25 +22,27 @@
  * SOFTWARE.
  */
 
-package ru.ifmo.se.sdbrep.repository;
+package ru.ifmo.se.sdbrep.controller;
 
-import org.springframework.data.cassandra.repository.CassandraRepository;
-import ru.ifmo.se.sdbrep.model.Log;
-
-import java.util.List;
-import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+import ru.ifmo.se.sdbrep.service.LogService;
+import ru.ifmo.se.sdbrep.service.ProfileService;
 
 /**
- * This interface is used as Cassandra Spring Data repository
- * for {@link Log} entities.
+ * This class is RESTController for requests associated
+ * with authentication (login / register).
  *
  * @author seniorkot
  * @version 1.0
  * @since 1.0
  */
-public interface LogRepository extends CassandraRepository<Log, UUID> {
+@RestController
+public class AuthController {
 
-    List<Log> findAllByProfileIdAndProjectId(String profileId, String projectId);
-    List<Log> findAllByProfileId(String profileId);
-    List<Log> findAllByProjectId(String projectId);
+    @Autowired
+    private ProfileService mProfileService;
+
+    @Autowired
+    private LogService mLogService;
 }

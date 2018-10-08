@@ -24,11 +24,14 @@
 
 package ru.ifmo.se.sdbrep.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.ifmo.se.sdbrep.model.Log;
+import ru.ifmo.se.sdbrep.repository.LogRepository;
 import ru.ifmo.se.sdbrep.service.LogService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -42,38 +45,46 @@ import java.util.UUID;
 @Service
 public class LogServiceImpl implements LogService {
 
+    @Autowired
+    private LogRepository mLogRepository;
+
     @Override
     public Log getById(UUID id) {
-        return null;
+        Optional<Log> log = mLogRepository.findById(id);
+        return log.orElse(null);
     }
 
     @Override
     public List<Log> getAll() {
-        return null;
+        return mLogRepository.findAll();
     }
 
     @Override
     public List<Log> getAll(String profileId, String projectId) {
-        return null;
+        return mLogRepository.findAllByProfileIdAndProjectId(profileId, projectId);
     }
 
     @Override
     public List<Log> getAllByProfileId(String profileId) {
-        return null;
+        return mLogRepository.findAllByProfileId(profileId);
     }
 
     @Override
     public List<Log> getAllByProjectId(String projectId) {
-        return null;
+        return mLogRepository.findAllByProjectId(projectId);
     }
 
     @Override
     public Log createLog(String message, String profileId) {
-        return null;
+        return createLog(message, profileId, null);
     }
 
     @Override
     public Log createLog(String message, String profileId, String projectId) {
-        return null;
+        Log log = new Log();
+        log.setAction(message);
+        log.setProfileId(profileId);
+        log.setProjectId(projectId);
+        return mLogRepository.insert(log);
     }
 }
