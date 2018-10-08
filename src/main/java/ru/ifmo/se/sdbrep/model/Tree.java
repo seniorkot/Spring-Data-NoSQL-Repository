@@ -24,5 +24,62 @@
 
 package ru.ifmo.se.sdbrep.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
+
+/**
+ * This class is used as trees entity.
+ *
+ * @author seniorkot
+ * @version 1.0
+ * @since 1.0
+ */
+@Document(collection = "trees")
 public class Tree {
+
+    @Id
+    private String id;
+
+    private String dirName;
+
+    private List<Tree> trees;
+    private List<Blob> blobs;
+
+    public Tree() {
+
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getDirName() {
+        return dirName;
+    }
+
+    public void setDirName(String dirName) {
+        this.dirName = dirName;
+    }
+
+    public List<Tree> getTrees() {
+        return trees;
+    }
+
+    public void setTrees(List<Tree> trees) {
+        this.trees = trees;
+    }
+
+    public List<Blob> getBlobs() {
+        return blobs;
+    }
+
+    public void setBlobs(List<Blob> blobs) {
+        this.blobs = blobs;
+    }
 }

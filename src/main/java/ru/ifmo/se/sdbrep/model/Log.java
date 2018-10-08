@@ -24,5 +24,79 @@
 
 package ru.ifmo.se.sdbrep.model;
 
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
+
+import java.util.Date;
+import java.util.UUID;
+
+/**
+ * This class is used as log entity.
+ *
+ * @author seniorkot
+ * @version 1.0
+ * @since 1.0
+ */
+@Table("logs")
 public class Log {
+
+    @PrimaryKey("log_id")
+    private UUID id;
+
+    @Column("profile_id")
+    private String profileId;
+
+    @Column("project_id")
+    private String projectId;
+
+    @Column("action_text")
+    private String action;
+
+    @Column("log_time")
+    private Date time;
+
+    public Log() {
+
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(String profileId) {
+        this.profileId = profileId;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
 }

@@ -24,5 +24,50 @@
 
 package ru.ifmo.se.sdbrep.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+/**
+ * This class is used as blob entity.
+ *
+ * @author seniorkot
+ * @version 1.0
+ * @since 1.0
+ */
+@Document(collection = "blobs")
 public class Blob {
+
+    @Id
+    private String id;
+
+    private String fileName;
+    private String code;
+
+    public Blob() {
+
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 }

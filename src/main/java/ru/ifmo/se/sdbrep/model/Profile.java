@@ -24,7 +24,8 @@
 
 package ru.ifmo.se.sdbrep.model;
 
-import org.neo4j.ogm.annotation.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -32,7 +33,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 /**
- * This class is used as profile entity;
+ * This class is used as profile entity.
  *
  * @author seniorkot
  * @version 1.0
@@ -47,6 +48,7 @@ public class Profile {
     @Indexed(unique = true)
     private String username;
 
+    @JsonIgnore
     private String password;
 
     private String firstName;

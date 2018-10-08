@@ -30,6 +30,10 @@ import ru.ifmo.se.sdbrep.model.Profile;
 /**
  * This interface is used as MongoDB Spring Data repository
  * for {@link Profile} entities.
+ *
+ * @author seniorkot
+ * @version 1.0
+ * @since 1.0
  */
 public interface ProfileRepository extends MongoRepository<Profile, String> {
 

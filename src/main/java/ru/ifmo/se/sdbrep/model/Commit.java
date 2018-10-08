@@ -24,5 +24,33 @@
 
 package ru.ifmo.se.sdbrep.model;
 
+import org.neo4j.ogm.annotation.GeneratedValue;
+import org.neo4j.ogm.annotation.Id;
+import org.neo4j.ogm.annotation.NodeEntity;
+
+/**
+ * This class is used as commit entity.
+ *
+ * @author seniorkot
+ * @version 1.0
+ * @since 1.0
+ */
+@NodeEntity
 public class Commit {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    public Commit() {
+
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

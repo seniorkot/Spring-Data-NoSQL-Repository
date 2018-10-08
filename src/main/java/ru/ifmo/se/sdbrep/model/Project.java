@@ -24,14 +24,14 @@
 
 package ru.ifmo.se.sdbrep.model;
 
-import org.neo4j.ogm.annotation.Id;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
 /**
- * This class is used as project entity;
+ * This class is used as project entity.
  *
  * @author seniorkot
  * @version 1.0
@@ -48,6 +48,9 @@ public class Project {
 
     @DBRef
     private List<Profile> collaborators;
+
+    @DBRef
+    private Tree root;
 
     public Project() {
 
@@ -83,5 +86,13 @@ public class Project {
 
     public void setCollaborators(List<Profile> collaborators) {
         this.collaborators = collaborators;
+    }
+
+    public Tree getRoot() {
+        return root;
+    }
+
+    public void setRoot(Tree root) {
+        this.root = root;
     }
 }

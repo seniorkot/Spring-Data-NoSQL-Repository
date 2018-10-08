@@ -24,6 +24,19 @@
 
 package ru.ifmo.se.sdbrep.repository;
 
-public interface LogRepository {
+import org.springframework.data.cassandra.repository.CassandraRepository;
+import ru.ifmo.se.sdbrep.model.Log;
+
+import java.util.UUID;
+
+/**
+ * This interface is used as Cassandra Spring Data repository
+ * for {@link Log} entities.
+ *
+ * @author seniorkot
+ * @version 1.0
+ * @since 1.0
+ */
+public interface LogRepository extends CassandraRepository<Log, UUID> {
 
 }

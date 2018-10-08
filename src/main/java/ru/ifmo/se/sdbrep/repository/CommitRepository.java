@@ -24,6 +24,17 @@
 
 package ru.ifmo.se.sdbrep.repository;
 
-public interface CommitRepository {
+import org.springframework.data.neo4j.repository.Neo4jRepository;
+import ru.ifmo.se.sdbrep.model.Commit;
+
+/**
+ * This interface is used as Neo4j Spring Data repository
+ * for {@link Commit} entities.
+ *
+ * @author seniorkot
+ * @version 1.0
+ * @since 1.0
+ */
+public interface CommitRepository extends Neo4jRepository<Commit, Long> {
 
 }

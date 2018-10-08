@@ -24,6 +24,17 @@
 
 package ru.ifmo.se.sdbrep.repository;
 
-public interface BlobRepository {
+import org.springframework.data.mongodb.repository.MongoRepository;
+import ru.ifmo.se.sdbrep.model.Blob;
+
+/**
+ * This interface is used as MongoDB Spring Data repository
+ * for {@link Blob} entities.
+ *
+ * @author seniorkot
+ * @version 1.0
+ * @since 1.0
+ */
+public interface BlobRepository extends MongoRepository<Blob, String> {
 
 }

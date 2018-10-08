@@ -24,6 +24,17 @@
 
 package ru.ifmo.se.sdbrep.repository;
 
-public interface TreeRepository {
+import org.springframework.data.mongodb.repository.MongoRepository;
+import ru.ifmo.se.sdbrep.model.Tree;
+
+/**
+ * This interface is used as MongoDB Spring Data repository
+ * for {@link Tree} entities.
+ *
+ * @author seniorkot
+ * @version 1.0
+ * @since 1.0
+ */
+public interface TreeRepository extends MongoRepository<Tree, String> {
 
 }

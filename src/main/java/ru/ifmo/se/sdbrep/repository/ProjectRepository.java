@@ -30,6 +30,10 @@ import ru.ifmo.se.sdbrep.model.Project;
 /**
  * This interface is used as MongoDB Spring Data repository
  * for {@link Project} entities.
+ *
+ * @author seniorkot
+ * @version 1.0
+ * @since 1.0
  */
 public interface ProjectRepository extends MongoRepository<Project, String> {
 
