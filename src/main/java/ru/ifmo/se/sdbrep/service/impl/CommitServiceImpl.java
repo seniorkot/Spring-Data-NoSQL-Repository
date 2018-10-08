@@ -22,21 +22,20 @@
  * SOFTWARE.
  */
 
-package ru.ifmo.se.sdbrep.service;
+package ru.ifmo.se.sdbrep.service.impl;
 
-import org.springframework.security.core.userdetails.UserDetailsService;
-import ru.ifmo.se.sdbrep.model.Profile;
+import org.springframework.stereotype.Service;
+import ru.ifmo.se.sdbrep.service.CommitService;
 
 /**
- * This interface contains methods that service must implement
- * to work with {@link Profile} entities in the application.<br>
- * Extends from {@link UserDetailsService} for Spring Security
- * work.
+ * This class is used as commit app service
+ * that implements {@link CommitService} methods.
  *
  * @author seniorkot
  * @version 1.0
  * @since 1.0
  */
-public interface ProfileService extends UserDetailsService {
+@Service
+public class CommitServiceImpl implements CommitService {
 
 }

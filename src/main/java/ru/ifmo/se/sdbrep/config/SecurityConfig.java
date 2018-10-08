@@ -30,7 +30,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import ru.ifmo.se.sdbrep.service.ProfileService;
+import ru.ifmo.se.sdbrep.service.impl.ProfileServiceImpl;
 
 /**
  * This class is used for Spring Security configuration.<br>
@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public UserDetailsService mongoUserDetails() {
-        return new ProfileService();
+        return new ProfileServiceImpl();
     }
 
     /**
