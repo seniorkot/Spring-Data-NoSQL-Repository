@@ -25,6 +25,7 @@
 package ru.ifmo.se.sdbrep.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -53,7 +54,7 @@ public class ProfileServiceImpl implements ProfileService, UserDetailsService {
     private ProfileRepository mProfileRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
         Optional<UserDetails> profile = mProfileRepository.findByUsername(username);
         return profile.orElse(null);
     }
@@ -69,13 +70,13 @@ public class ProfileServiceImpl implements ProfileService, UserDetailsService {
     }
 
     @Override
-    public Profile getById(String id) {
+    public Profile getById(@NonNull String id) {
         Optional<Profile> profile = mProfileRepository.findById(id);
         return profile.orElse(null);
     }
 
     @Override
-    public Profile getByUsername(String username) {
+    public Profile getByUsername(@NonNull String username) {
         UserDetails profile = loadUserByUsername(username);
         if (profile instanceof Profile) {
             return (Profile) profile;
@@ -84,13 +85,13 @@ public class ProfileServiceImpl implements ProfileService, UserDetailsService {
     }
 
     @Override
-    public Profile getByUsernameAndPassword(String username, String password) {
+    public Profile getByUsernameAndPassword(@NonNull String username, @NonNull String password) {
         Optional<Profile> profile = mProfileRepository.findByUsernameAndPassword(username, password);
         return profile.orElse(null);
     }
 
     @Override
-    public Profile create(String username, String password) {
+    public Profile create(@NonNull String username, @NonNull String password) {
         if (loadUserByUsername(username) == null) {
             Profile profile = new Profile(username, password, new String[]{SecurityConfig.Roles.ROLE_USER});
             return mProfileRepository.insert(profile);
@@ -99,7 +100,7 @@ public class ProfileServiceImpl implements ProfileService, UserDetailsService {
     }
 
     @Override
-    public Profile update(Profile profile) {
+    public Profile update(@NonNull Profile profile) {
         Profile currentProfile = getCurrent();
         if (currentProfile != null) {
             if (profile.getUsername() != null && loadUserByUsername(profile.getUsername()) == null) {

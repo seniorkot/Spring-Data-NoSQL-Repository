@@ -25,8 +25,10 @@
 package ru.ifmo.se.sdbrep.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import ru.ifmo.se.sdbrep.model.Profile;
 import ru.ifmo.se.sdbrep.service.LogService;
 import ru.ifmo.se.sdbrep.service.ProfileService;
 
@@ -48,4 +50,38 @@ public class ProfileController {
 
     @Autowired
     private LogService mLogService;
+
+    /**
+     * This endpoint returns user profile specified by
+     * username. If no username provided method returns
+     * current user's profile.
+     *
+     * @param username Username (optional)
+     * @return {@link Profile} entity and response code (200 - OK, 404 - User not found)
+     */
+    @RequestMapping(path = "/{username}", method = RequestMethod.GET)
+    public ResponseEntity<Profile> getProfile(@PathVariable(required = false) String username) {
+        Profile profile;
+        if (username != null) {
+            if ((profile = mProfileService.getByUsername(username)) != null) {
+                return new ResponseEntity<>(profile, HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+        else {
+            return new ResponseEntity<>(mProfileService.getCurrent(), HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(path = "/", method = RequestMethod.PUT)
+    public ResponseEntity<Void> updateProfile(@RequestBody Profile profile) {
+        Profile currentProfile = mProfileService.update(profile);
+        if (currentProfile != null) {
+            mLogService.createLog("has updated profile info", currentProfile.getId());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
