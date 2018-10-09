@@ -29,8 +29,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.se.sdbrep.model.Profile;
+import ru.ifmo.se.sdbrep.model.Project;
 import ru.ifmo.se.sdbrep.service.LogService;
 import ru.ifmo.se.sdbrep.service.ProfileService;
+import ru.ifmo.se.sdbrep.service.ProjectService;
 
 /**
  * This class is RESTController for requests associated
@@ -47,6 +49,9 @@ public class ProfileController {
 
     @Autowired
     private ProfileService mProfileService;
+
+    @Autowired
+    private ProjectService mProjectService;
 
     @Autowired
     private LogService mLogService;
@@ -75,6 +80,12 @@ public class ProfileController {
         }
     }
 
+    /**
+     * This endpoint updates current user's profile.
+     *
+     * @param profile Profile data to update
+     * @return 200 - OK, 500 - Error
+     */
     @RequestMapping(path = "/", method = RequestMethod.PUT)
     public ResponseEntity<Void> updateProfile(@RequestBody Profile profile) {
         Profile currentProfile = mProfileService.update(profile);
@@ -83,5 +94,23 @@ public class ProfileController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * This endpoint creates new project in current
+     * user's profile.
+     *
+     * @param projectName New project name
+     * @return 201 - new project created, 400 - bad
+     */
+    @RequestMapping(path = "/project/{projectName}", method = RequestMethod.POST)
+    public ResponseEntity<Void> createProject(@PathVariable String projectName) {
+        Project project = mProjectService.create(projectName);
+        if (project != null) {
+            mLogService.createLog("has created project",
+                    mProfileService.getCurrent().getId(), project.getId());
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

@@ -27,6 +27,8 @@ package ru.ifmo.se.sdbrep.repository;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import ru.ifmo.se.sdbrep.model.Project;
 
+import java.util.List;
+
 /**
  * This interface is used as MongoDB Spring Data repository
  * for {@link Project} entities.
@@ -37,4 +39,5 @@ import ru.ifmo.se.sdbrep.model.Project;
  */
 public interface ProjectRepository extends MongoRepository<Project, String> {
 
+    List<Project> findAllByCollaboratorsContains(String collaborator);
 }

@@ -24,6 +24,7 @@
 
 package ru.ifmo.se.sdbrep.service;
 
+import org.springframework.lang.NonNull;
 import ru.ifmo.se.sdbrep.model.Project;
 
 import java.util.List;
@@ -38,8 +39,14 @@ import java.util.List;
  */
 public interface ProjectService {
 
-    Project getById(String id);
-    Project getByProfileUsernameAndName(String username, String name);
+    Project getById(@NonNull String id);
+    Project getCurrentByName(@NonNull String name);
+    Project getByProfileUsernameAndName(@NonNull String username, @NonNull String name);
     List<Project> getAllCurrent();
-    List<Project> getAllByCollaboratorId(String collaborator);
+    List<Project> getAllByProfileUsername(@NonNull String username);
+    List<Project> getAllByCollaborator(@NonNull String collaborator);
+    Project create(@NonNull String name);
+    Project update(@NonNull String projectName, @NonNull Project project);
+    Project addCollaborator(@NonNull String projectName, @NonNull String collaborator);
+    Project removeCollaborator(@NonNull String projectName, @NonNull String collaborator);
 }

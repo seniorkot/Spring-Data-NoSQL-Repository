@@ -103,8 +103,13 @@ public class ProfileServiceImpl implements ProfileService, UserDetailsService {
     public Profile update(@NonNull Profile profile) {
         Profile currentProfile = getCurrent();
         if (currentProfile != null) {
-            if (profile.getUsername() != null && loadUserByUsername(profile.getUsername()) == null) {
-                currentProfile.setUsername(profile.getUsername());
+            if (profile.getUsername() != null) {
+                if (loadUserByUsername(profile.getUsername()) == null) {
+                    currentProfile.setUsername(profile.getUsername());
+                }
+                else {
+                    return null;
+                }
             }
             if (profile.getPassword() != null) {
                 currentProfile.setPassword(profile.getPassword());

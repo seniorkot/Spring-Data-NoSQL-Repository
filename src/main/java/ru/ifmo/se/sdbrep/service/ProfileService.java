@@ -24,6 +24,7 @@
 
 package ru.ifmo.se.sdbrep.service;
 
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.ifmo.se.sdbrep.model.Profile;
 
@@ -52,7 +53,7 @@ public interface ProfileService {
      * @param id Profile id
      * @return {@link Profile} entity
      */
-    Profile getById(String id);
+    Profile getById(@NonNull String id);
 
     /**
      * Gets and returns profile specified by username.
@@ -60,7 +61,7 @@ public interface ProfileService {
      * @param username Profile username
      * @return {@link Profile} entity
      */
-    Profile getByUsername(String username);
+    Profile getByUsername(@NonNull String username);
 
     /**
      * Gets and returns profile specified by username
@@ -70,7 +71,7 @@ public interface ProfileService {
      * @param password Profile password
      * @return {@link Profile} entity
      */
-    Profile getByUsernameAndPassword(String username, String password);
+    Profile getByUsernameAndPassword(@NonNull String username, @NonNull String password);
 
     /**
      * Creates new Profile in the system.
@@ -79,7 +80,7 @@ public interface ProfileService {
      * @param password Profile password
      * @return Created {@link Profile} entity
      */
-    Profile create(String username, String password);
+    Profile create(@NonNull String username, @NonNull String password);
 
     /**
      * Updates current user profile.
@@ -87,5 +88,5 @@ public interface ProfileService {
      * @param profile Profile with new data
      * @return Updated profile
      */
-    Profile update(Profile profile);
+    Profile update(@NonNull Profile profile);
 }
