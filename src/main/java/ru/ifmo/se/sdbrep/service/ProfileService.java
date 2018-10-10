@@ -27,6 +27,7 @@ package ru.ifmo.se.sdbrep.service;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.ifmo.se.sdbrep.model.Profile;
+import ru.ifmo.se.sdbrep.model.Project;
 
 /**
  * This interface contains methods that service must implement
@@ -89,4 +90,20 @@ public interface ProfileService {
      * @return Updated profile
      */
     Profile update(@NonNull Profile profile);
+
+    /**
+     * Adds new project to current profile.
+     *
+     * @param project Project to add
+     * @return Profile with new projects list
+     */
+    Profile addProject(@NonNull Project project);
+
+    /**
+     * Removes project from current profile.
+     *
+     * @param project Project to add
+     * @return Profile with new projects list
+     */
+    Profile removeProject(@NonNull Project project);
 }

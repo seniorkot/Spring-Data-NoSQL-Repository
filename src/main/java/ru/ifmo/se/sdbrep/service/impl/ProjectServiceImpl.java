@@ -63,7 +63,7 @@ public class ProjectServiceImpl implements ProjectService {
     public Project getCurrentByName(@NonNull String name) {
         Profile profile = mProfileService.getCurrent();
         for (Project project : profile.getProjects()) {
-            if (project.getName().equals(name)) {
+            if (project != null && project.getName().equals(name)) {
                 return project;
             }
         }
@@ -74,7 +74,7 @@ public class ProjectServiceImpl implements ProjectService {
     public Project getByProfileUsernameAndName(@NonNull String username, @NonNull String name) {
         Profile profile = mProfileService.getByUsername(username);
         for (Project project : profile.getProjects()) {
-            if (project.getName().equals(name)) {
+            if (project != null && project.getName().equals(name)) {
                 return project;
             }
         }
@@ -100,15 +100,14 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project create(@NonNull String name) {
-        Profile profile = mProfileService.getCurrent();
-        for (Project project : profile.getProjects()) {
-            if (project.getName().equals(name)) {
-                return null;
-            }
+        if (getCurrentByName(name) == null) {
+            Project project = new Project();
+            project.setName(name);
+            project = mProjectRepository.insert(project);
+            mProfileService.addProject(project);
+            return project;
         }
-        Project project = new Project();
-        project.setName(name);
-        return mProjectRepository.insert(project);
+        return null;
     }
 
     @Override
@@ -129,6 +128,12 @@ public class ProjectServiceImpl implements ProjectService {
             return mProjectRepository.save(selectedProject);
         }
         return null;
+    }
+
+    @Override
+    public void delete(Project project) {
+        mProfileService.removeProject(project);
+        mProjectRepository.delete(project);
     }
 
     @Override

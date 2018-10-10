@@ -33,6 +33,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class Profile implements UserDetails {
     private List<GrantedAuthority> authorities;
 
     @DBRef
-    private List<Project> projects;
+    private List<Project> projects = new ArrayList<>();
 
     public Profile() {
 

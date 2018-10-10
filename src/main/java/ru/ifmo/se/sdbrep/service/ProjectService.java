@@ -47,6 +47,7 @@ public interface ProjectService {
     List<Project> getAllByCollaborator(@NonNull String collaborator);
     Project create(@NonNull String name);
     Project update(@NonNull String projectName, @NonNull Project project);
+    void delete(@NonNull Project project);
     Project addCollaborator(@NonNull String projectName, @NonNull String collaborator);
     Project removeCollaborator(@NonNull String projectName, @NonNull String collaborator);
 }

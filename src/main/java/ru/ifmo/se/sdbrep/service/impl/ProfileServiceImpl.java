@@ -33,6 +33,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.ifmo.se.sdbrep.config.SecurityConfig;
 import ru.ifmo.se.sdbrep.model.Profile;
+import ru.ifmo.se.sdbrep.model.Project;
 import ru.ifmo.se.sdbrep.repository.ProfileRepository;
 import ru.ifmo.se.sdbrep.service.ProfileService;
 
@@ -61,11 +62,8 @@ public class ProfileServiceImpl implements ProfileService, UserDetailsService {
 
     @Override
     public Profile getCurrent() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (userDetails instanceof Profile) {
-            return (Profile) userDetails;
-        }
-        return null;
+        String id = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return getById(id);
 
     }
 
@@ -126,5 +124,19 @@ public class ProfileServiceImpl implements ProfileService, UserDetailsService {
             return mProfileRepository.save(currentProfile);
         }
         return null;
+    }
+
+    @Override
+    public Profile addProject(Project project) {
+        Profile currentProfile = getCurrent();
+        currentProfile.getProjects().add(project);
+        return mProfileRepository.save(currentProfile);
+    }
+
+    @Override
+    public Profile removeProject(Project project) {
+        Profile currentProfile = getCurrent();
+        currentProfile.getProjects().remove(project);
+        return mProfileRepository.save(currentProfile);
     }
 }
