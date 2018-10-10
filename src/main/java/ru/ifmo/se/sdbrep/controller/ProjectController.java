@@ -168,4 +168,36 @@ public class ProjectController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    /**
+     * This endpoint adds new collaborator to the project.
+     *
+     * @param projectName Project name
+     * @param collaborator Collaborator
+     * @return 200 - OK, 400 - Project or profile not found or collaborator already exists in the project
+     */
+    @RequestMapping(path = "/{projectName}/collaborator/{collaborator}", method = RequestMethod.POST)
+    public ResponseEntity<Void> addCollaborator(@PathVariable String projectName,
+                                                @PathVariable String collaborator) {
+        if (mProjectService.addCollaborator(projectName, collaborator) != null) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * This endpoint deletes collaborator from the project.
+     *
+     * @param projectName Project name
+     * @param collaborator Collaborator
+     * @return 200 - OK, 400 - Project collaborator not found
+     */
+    @RequestMapping(path = "/{projectName}/collaborator/{collaborator}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> removeCollaborator(@PathVariable String projectName,
+                                                   @PathVariable String collaborator) {
+        if (mProjectService.removeCollaborator(projectName, collaborator) != null) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }

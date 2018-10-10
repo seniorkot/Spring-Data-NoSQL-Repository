@@ -140,8 +140,12 @@ public class ProjectServiceImpl implements ProjectService {
     public Project addCollaborator(@NonNull String projectName, @NonNull String collaborator) {
         Project project = getCurrentByName(projectName);
         if (project != null && !project.getCollaborators().contains(collaborator)) {
-            project.getCollaborators().add(collaborator);
-            return mProjectRepository.save(project);
+            if (!mProfileService.getCurrent().getUsername().equals(collaborator) ||
+                    mProfileService.getByUsername(collaborator) != null) {
+                project.getCollaborators().add(collaborator);
+                return mProjectRepository.save(project);
+            }
+            return null;
         }
         return null;
     }
