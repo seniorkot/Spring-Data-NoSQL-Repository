@@ -24,9 +24,10 @@
 
 package ru.ifmo.se.sdbrep.model;
 
-import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.utils.UUIDs;
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.*;
 
 import java.util.Date;
 import java.util.UUID;
@@ -38,25 +39,31 @@ import java.util.UUID;
  * @version 1.0
  * @since 1.0
  */
-@Table("logs")
+@Table(value = "logs")
 public class Log {
 
-    @PrimaryKey("log_id")
+    @PrimaryKeyColumn(value = "log_id", type = PrimaryKeyType.PARTITIONED)
+    @CassandraType(type = DataType.Name.UUID)
     private UUID id;
 
     @Column("profile_id")
+    @CassandraType(type = DataType.Name.TEXT)
     private String profileId;
 
     @Column("project_id")
+    @CassandraType(type = DataType.Name.TEXT)
     private String projectId;
 
     @Column("action_text")
+    @CassandraType(type = DataType.Name.TEXT)
     private String action;
 
     @Column("log_time")
+    @CassandraType(type = DataType.Name.TIMESTAMP)
     private Date time;
 
     public Log() {
+        this.id = UUIDs.timeBased();
         this.time = new Date();
     }
 
