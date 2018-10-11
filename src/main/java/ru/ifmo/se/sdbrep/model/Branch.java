@@ -24,42 +24,35 @@
 
 package ru.ifmo.se.sdbrep.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.neo4j.ogm.annotation.*;
 
 /**
- * This class is used as project entity.
+ * This class is used as branch entity.
  *
  * @author seniorkot
  * @version 1.0
  * @since 1.0
  */
-@Document(collection = "projects")
-public class Project {
-
+@RelationshipEntity(type = "branch")
+public class Branch {
+    
     @Id
-    private String id;
+    @GeneratedValue
+    private Long id;
 
     private String name;
-    private String info;
 
-    private List<String> collaborators = new ArrayList<>();
+    @StartNode
+    private Commit previousCommit;
 
-    // TODO: Set smth to view code
+    @EndNode
+    private Commit nextCommit;
 
-    public Project() {
-
-    }
-
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -71,19 +64,19 @@ public class Project {
         this.name = name;
     }
 
-    public String getInfo() {
-        return info;
+    public Commit getPreviousCommit() {
+        return previousCommit;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setPreviousCommit(Commit previousCommit) {
+        this.previousCommit = previousCommit;
     }
 
-    public List<String> getCollaborators() {
-        return collaborators;
+    public Commit getNextCommit() {
+        return nextCommit;
     }
 
-    public void setCollaborators(List<String> collaborators) {
-        this.collaborators = collaborators;
+    public void setNextCommit(Commit nextCommit) {
+        this.nextCommit = nextCommit;
     }
 }

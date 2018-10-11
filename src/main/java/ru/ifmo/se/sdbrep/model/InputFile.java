@@ -24,66 +24,35 @@
 
 package ru.ifmo.se.sdbrep.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * This class is used as project entity.
+ * This class is used as input file entity.
  *
  * @author seniorkot
  * @version 1.0
  * @since 1.0
  */
-@Document(collection = "projects")
-public class Project {
+public class InputFile {
 
-    @Id
-    private String id;
+    private String filePath;
+    private String file;
 
-    private String name;
-    private String info;
-
-    private List<String> collaborators = new ArrayList<>();
-
-    // TODO: Set smth to view code
-
-    public Project() {
+    public InputFile() {
 
     }
 
-    public String getId() {
-        return id;
+    public String getFilePath() {
+        return filePath;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
-    public String getName() {
-        return name;
+    public String getFile() {
+        return file;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
-    }
-
-    public List<String> getCollaborators() {
-        return collaborators;
-    }
-
-    public void setCollaborators(List<String> collaborators) {
-        this.collaborators = collaborators;
+    public void setFile(String file) {
+        this.file = file;
     }
 }

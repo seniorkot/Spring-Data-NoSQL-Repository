@@ -27,6 +27,10 @@ package ru.ifmo.se.sdbrep.model;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is used as commit entity.
@@ -42,6 +46,11 @@ public class Commit {
     @GeneratedValue
     private Long id;
 
+    private String message;
+
+    @Relationship(type = "branch", direction = Relationship.INCOMING)
+    private List<Branch> previousCommits = new ArrayList<>();
+
     public Commit() {
 
     }
@@ -52,5 +61,21 @@ public class Commit {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public List<Branch> getPreviousCommits() {
+        return previousCommits;
+    }
+
+    public void setPreviousCommits(List<Branch> previousCommits) {
+        this.previousCommits = previousCommits;
     }
 }

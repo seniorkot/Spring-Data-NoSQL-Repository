@@ -25,6 +25,7 @@
 package ru.ifmo.se.sdbrep.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -45,6 +46,8 @@ public class Tree {
     private String dirName;
 
     private List<Tree> trees;
+
+    @DBRef
     private List<Blob> blobs;
 
     public Tree() {
