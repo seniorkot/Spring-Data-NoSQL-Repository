@@ -33,8 +33,10 @@ import org.neo4j.ogm.annotation.*;
  * @version 1.0
  * @since 1.0
  */
-@RelationshipEntity(type = "branch")
+@NodeEntity
 public class Branch {
+
+    private static final String DEFAULT_BRANCH = "master";
     
     @Id
     @GeneratedValue
@@ -42,11 +44,12 @@ public class Branch {
 
     private String name;
 
-    @StartNode
-    private Commit previousCommit;
+    @Relationship(type = "HEAD")
+    private Commit lastCommit;
 
-    @EndNode
-    private Commit nextCommit;
+    public Branch() {
+        this.name = DEFAULT_BRANCH;
+    }
 
     public Long getId() {
         return id;
@@ -64,19 +67,11 @@ public class Branch {
         this.name = name;
     }
 
-    public Commit getPreviousCommit() {
-        return previousCommit;
+    public Commit getLastCommit() {
+        return lastCommit;
     }
 
-    public void setPreviousCommit(Commit previousCommit) {
-        this.previousCommit = previousCommit;
-    }
-
-    public Commit getNextCommit() {
-        return nextCommit;
-    }
-
-    public void setNextCommit(Commit nextCommit) {
-        this.nextCommit = nextCommit;
+    public void setLastCommit(Commit lastCommit) {
+        this.lastCommit = lastCommit;
     }
 }
