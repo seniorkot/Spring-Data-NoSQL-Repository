@@ -29,7 +29,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.se.sdbrep.model.Project;
-import ru.ifmo.se.sdbrep.model.Tree;
 import ru.ifmo.se.sdbrep.service.LogService;
 import ru.ifmo.se.sdbrep.service.ProfileService;
 import ru.ifmo.se.sdbrep.service.ProjectService;

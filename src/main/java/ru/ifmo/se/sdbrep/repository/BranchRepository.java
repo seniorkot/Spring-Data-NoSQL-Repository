@@ -22,56 +22,22 @@
  * SOFTWARE.
  */
 
-package ru.ifmo.se.sdbrep.model;
+package ru.ifmo.se.sdbrep.repository;
 
-import org.neo4j.ogm.annotation.*;
+import org.springframework.data.neo4j.repository.Neo4jRepository;
+import ru.ifmo.se.sdbrep.model.Branch;
+
+import java.util.List;
 
 /**
- * This class is used as branch entity.
+ * This interface is used as Neo4j Spring Data repository
+ * for {@link Branch} entities.
  *
  * @author seniorkot
  * @version 1.0
  * @since 1.0
  */
-@NodeEntity
-public class Branch {
+public interface BranchRepository extends Neo4jRepository<Branch, Long> {
 
-    public static final String DEFAULT_BRANCH = "master";
-    
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    private String name;
-
-    @Relationship(type = "HEAD")
-    private Commit lastCommit;
-
-    public Branch() {
-        this.name = DEFAULT_BRANCH;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Commit getLastCommit() {
-        return lastCommit;
-    }
-
-    public void setLastCommit(Commit lastCommit) {
-        this.lastCommit = lastCommit;
-    }
+    Branch findByIdInAndName(List<Long> ids, String name);
 }

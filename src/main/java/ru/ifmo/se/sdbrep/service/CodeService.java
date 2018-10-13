@@ -24,6 +24,7 @@
 
 package ru.ifmo.se.sdbrep.service;
 
+import org.springframework.lang.NonNull;
 import ru.ifmo.se.sdbrep.model.Blob;
 import ru.ifmo.se.sdbrep.model.Branch;
 import ru.ifmo.se.sdbrep.model.Commit;
@@ -40,4 +41,12 @@ import ru.ifmo.se.sdbrep.model.Tree;
  */
 public interface CodeService {
 
+    Tree getTree(@NonNull String id);
+    Tree getTree(@NonNull String projectName, @NonNull String branchName);
+    Tree getTree(@NonNull String profileName, @NonNull String projectName, @NonNull String branchName);
+    Blob getBlob(@NonNull String id);
+    Commit getCommit(@NonNull Long id);
+    Branch getBranch(@NonNull Long id);
+    Branch getBranch(@NonNull String projectName, @NonNull String branchName);
+    Branch getBranch(@NonNull String profileName, @NonNull String projectName, @NonNull String branchName);
 }
