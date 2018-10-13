@@ -29,13 +29,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.se.sdbrep.model.Profile;
-import ru.ifmo.se.sdbrep.model.Project;
 import ru.ifmo.se.sdbrep.service.LogService;
 import ru.ifmo.se.sdbrep.service.ProfileService;
-import ru.ifmo.se.sdbrep.service.ProjectService;
 
 /**
- * This class is a RESTController for requests associated
+ * This class is a REST Controller for requests associated
  * with getting / creating / updating / deleting user
  * profile(s).
  *
@@ -51,9 +49,6 @@ public class ProfileController {
     private ProfileService mProfileService;
 
     @Autowired
-    private ProjectService mProjectService;
-
-    @Autowired
     private LogService mLogService;
 
     /**
@@ -61,7 +56,7 @@ public class ProfileController {
      *
      * @return {@link Profile} entity and response code (200 - OK, 500 - Can't load current profile)
      */
-    @RequestMapping(path = "/", method = RequestMethod.GET)
+    @RequestMapping(path = "", method = RequestMethod.GET)
     public ResponseEntity<Profile> getCurrentProfile() {
         Profile profile;
         if ((profile = mProfileService.getCurrent()) != null) {
@@ -96,7 +91,7 @@ public class ProfileController {
      * @param profile Profile data to update
      * @return 200 - OK, 400 - Error
      */
-    @RequestMapping(path = "/", method = RequestMethod.PUT)
+    @RequestMapping(path = "", method = RequestMethod.PUT)
     public ResponseEntity<Void> updateProfile(@RequestBody Profile profile) {
         Profile currentProfile = mProfileService.update(profile);
         if (currentProfile != null) {

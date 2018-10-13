@@ -22,20 +22,22 @@
  * SOFTWARE.
  */
 
-package ru.ifmo.se.sdbrep.service.impl;
+package ru.ifmo.se.sdbrep.service;
 
-import org.springframework.stereotype.Service;
-import ru.ifmo.se.sdbrep.service.CommitService;
+import ru.ifmo.se.sdbrep.model.Blob;
+import ru.ifmo.se.sdbrep.model.Branch;
+import ru.ifmo.se.sdbrep.model.Commit;
+import ru.ifmo.se.sdbrep.model.Tree;
 
 /**
- * This class is used as commit app service
- * that implements {@link CommitService} methods.
+ * This interface contains methods that service must implement
+ * to work with {@link Branch}, {@link Commit}, {@link Blob}
+ * and {@link Tree} entities in the application.
  *
  * @author seniorkot
  * @version 1.0
  * @since 1.0
  */
-@Service
-public class CommitServiceImpl implements CommitService {
+public interface CodeService {
 
 }

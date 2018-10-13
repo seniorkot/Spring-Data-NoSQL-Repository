@@ -22,18 +22,20 @@
  * SOFTWARE.
  */
 
-package ru.ifmo.se.sdbrep.service;
+package ru.ifmo.se.sdbrep.service.impl;
 
-import ru.ifmo.se.sdbrep.model.Commit;
+import org.springframework.stereotype.Service;
+import ru.ifmo.se.sdbrep.service.CodeService;
 
 /**
- * This interface contains methods that service must implement
- * to work with {@link Commit} entities in the application.
+ * This class is used as commit app service
+ * that implements {@link CodeService} methods.
  *
  * @author seniorkot
  * @version 1.0
  * @since 1.0
  */
-public interface CommitService {
+@Service
+public class CodeServiceImpl implements CodeService {
 
 }

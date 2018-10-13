@@ -29,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.se.sdbrep.model.Project;
+import ru.ifmo.se.sdbrep.model.Tree;
 import ru.ifmo.se.sdbrep.service.LogService;
 import ru.ifmo.se.sdbrep.service.ProfileService;
 import ru.ifmo.se.sdbrep.service.ProjectService;
@@ -36,7 +37,7 @@ import ru.ifmo.se.sdbrep.service.ProjectService;
 import java.util.List;
 
 /**
- * This class is RESTController for requests associated
+ * This class is a REST Controller for requests associated
  * with getting / creating / updating / deleting user
  * profile(s).
  *
@@ -62,7 +63,7 @@ public class ProjectController {
      *
      * @return 200 - OK
      */
-    @RequestMapping(path = "/", method = RequestMethod.GET)
+    @RequestMapping(path = "", method = RequestMethod.GET)
     public ResponseEntity<List<Project>> getAllProjects() {
         return new ResponseEntity<>(mProjectService.getAllCurrent(), HttpStatus.OK);
     }
