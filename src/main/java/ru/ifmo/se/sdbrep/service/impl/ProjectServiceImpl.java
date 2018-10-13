@@ -137,11 +137,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project addCollaborator(@NonNull String projectName, @NonNull String collaborator) {
+    public Project addCollaborator(@NonNull String projectName, @NonNull String collaboratorName) {
         Project project = getCurrentByName(projectName);
-        if (project != null && !project.getCollaborators().contains(collaborator)) {
-            if (!mProfileService.getCurrent().getUsername().equals(collaborator) ||
-                    mProfileService.getByUsername(collaborator) != null) {
+        Profile collaborator = mProfileService.getByUsername(collaboratorName);
+        if (project != null && collaborator != null) {
+            if (!project.getCollaborators().contains(collaborator) &&
+                    !mProfileService.getCurrent().getUsername().equals(collaboratorName)) {
                 project.getCollaborators().add(collaborator);
                 return mProjectRepository.save(project);
             }
@@ -151,9 +152,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project removeCollaborator(@NonNull String projectName, @NonNull String collaborator) {
+    public Project removeCollaborator(@NonNull String projectName, @NonNull String collaboratorName) {
         Project project = getCurrentByName(projectName);
-        if (project != null && project.getCollaborators().contains(collaborator)) {
+        Profile collaborator = mProfileService.getByUsername(collaboratorName);
+        if (project != null && collaborator != null && project.getCollaborators().contains(collaborator)) {
             project.getCollaborators().remove(collaborator);
             return mProjectRepository.save(project);
         }

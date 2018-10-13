@@ -40,12 +40,13 @@ public class Commit {
     @GeneratedValue
     private Long id;
 
+    private String author;
     private String message;
 
     @Relationship(type = "COMMIT", direction = Relationship.INCOMING)
     private Commit previousCommit;
 
-    // TODO: Point on code tree
+    private String codeRoot;
 
     public Commit() {
 
@@ -57,6 +58,14 @@ public class Commit {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getMessage() {
@@ -73,5 +82,13 @@ public class Commit {
 
     public void setPreviousCommit (Commit previousCommit) {
         this.previousCommit = previousCommit;
+    }
+
+    public String getCodeRoot() {
+        return codeRoot;
+    }
+
+    public void setCodeRoot(String codeRoot) {
+        this.codeRoot = codeRoot;
     }
 }

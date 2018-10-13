@@ -24,6 +24,7 @@
 
 package ru.ifmo.se.sdbrep.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -47,9 +48,11 @@ public class Project {
     private String name;
     private String info;
 
-    private List<String> collaborators = new ArrayList<>();
+    @DBRef
+    private List<Profile> collaborators = new ArrayList<>();
 
-    // TODO: Set smth to view code
+    @JsonIgnore
+    private List<Long> branches = new ArrayList<>();
 
     public Project() {
 
@@ -79,11 +82,19 @@ public class Project {
         this.info = info;
     }
 
-    public List<String> getCollaborators() {
+    public List<Profile> getCollaborators() {
         return collaborators;
     }
 
-    public void setCollaborators(List<String> collaborators) {
+    public void setCollaborators(List<Profile> collaborators) {
         this.collaborators = collaborators;
+    }
+
+    public List<Long> getBranches() {
+        return branches;
+    }
+
+    public void setBranches(List<Long> branches) {
+        this.branches = branches;
     }
 }

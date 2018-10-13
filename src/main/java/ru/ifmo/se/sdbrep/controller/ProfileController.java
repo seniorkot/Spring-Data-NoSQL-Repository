@@ -94,7 +94,7 @@ public class ProfileController {
      * This endpoint updates current user's profile.
      *
      * @param profile Profile data to update
-     * @return 200 - OK, 500 - Error
+     * @return 200 - OK, 400 - Error
      */
     @RequestMapping(path = "/", method = RequestMethod.PUT)
     public ResponseEntity<Void> updateProfile(@RequestBody Profile profile) {
@@ -103,6 +103,6 @@ public class ProfileController {
             mLogService.createLog("has updated profile info", currentProfile.getId());
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

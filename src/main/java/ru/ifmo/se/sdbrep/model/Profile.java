@@ -60,8 +60,10 @@ public class Profile implements UserDetails {
     private String lastName;
     private String bio;
 
+    @JsonIgnore
     private List<GrantedAuthority> authorities;
 
+    @JsonIgnore
     @DBRef
     private List<Project> projects = new ArrayList<>();
 
@@ -131,21 +133,25 @@ public class Profile implements UserDetails {
         this.projects = projects;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;
