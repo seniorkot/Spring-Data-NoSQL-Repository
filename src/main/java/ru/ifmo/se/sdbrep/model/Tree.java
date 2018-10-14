@@ -28,6 +28,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,10 +46,10 @@ public class Tree {
 
     private String dirName;
 
-    private List<Tree> trees;
+    private List<Tree> trees = new ArrayList<>();
 
     @DBRef
-    private List<Blob> blobs;
+    private List<Blob> blobs = new ArrayList<>();
 
     public Tree() {
 

@@ -27,10 +27,7 @@ package ru.ifmo.se.sdbrep.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.ifmo.se.sdbrep.model.*;
-import ru.ifmo.se.sdbrep.repository.BlobRepository;
-import ru.ifmo.se.sdbrep.repository.BranchRepository;
-import ru.ifmo.se.sdbrep.repository.CommitRepository;
-import ru.ifmo.se.sdbrep.repository.TreeRepository;
+import ru.ifmo.se.sdbrep.repository.*;
 import ru.ifmo.se.sdbrep.service.CodeService;
 import ru.ifmo.se.sdbrep.service.ProfileService;
 import ru.ifmo.se.sdbrep.service.ProjectService;
@@ -61,6 +58,9 @@ public class CodeServiceImpl implements CodeService {
     private BranchRepository mBranchRepository;
 
     @Autowired
+    private ProjectRepository mProjectRepository;
+
+    @Autowired
     private ProjectService mProjectService;
 
     @Autowired
@@ -74,15 +74,25 @@ public class CodeServiceImpl implements CodeService {
     @Override
     public Tree getTree(String projectName, String branchName) {
         Branch branch = getBranch(projectName, branchName);
-        String treeId = branch.getLastCommit().getCodeRoot();
-        return getTree(treeId);
+        if (branch != null) {
+            Commit lastCommit = branch.getLastCommit();
+            if (lastCommit != null) {
+                return getTree(lastCommit.getCodeRoot());
+            }
+        }
+        return null;
     }
 
     @Override
     public Tree getTree(String profileName, String projectName, String branchName) {
         Branch branch = getBranch(profileName, projectName, branchName);
-        String treeId = branch.getLastCommit().getCodeRoot();
-        return getTree(treeId);
+        if (branch != null) {
+            Commit lastCommit = branch.getLastCommit();
+            if (lastCommit != null) {
+                return getTree(lastCommit.getCodeRoot());
+            }
+        }
+        return null;
     }
 
     @Override
@@ -102,14 +112,32 @@ public class CodeServiceImpl implements CodeService {
 
     @Override
     public Branch getBranch(String projectName, String branchName) {
-        List<Long> branchIds = mProjectService.getCurrentByName(projectName).getBranches();
-        return mBranchRepository.findByIdInAndName(branchIds, branchName);
+        Project project = mProjectService.getCurrentByName(projectName);
+        if (project != null) {
+            List<Long> branchIds = project.getBranches();
+            Iterable<Branch> branches = mBranchRepository.findAllById(branchIds);
+            for (Branch branch : branches) {
+                if (branch.getName().equals(branchName)) {
+                    return branch;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
     public Branch getBranch(String profileName, String projectName, String branchName) {
-        List<Long> branchIds = mProjectService.getByProfileUsernameAndName(profileName, projectName).getBranches();
-        return mBranchRepository.findByIdInAndName(branchIds, branchName);
+        Project project = mProjectService.getByProfileUsernameAndName(profileName, projectName);
+        if (project != null) {
+            List<Long> branchIds = project.getBranches();
+            Iterable<Branch> branches = mBranchRepository.findAllById(branchIds);
+            for (Branch branch : branches) {
+                if (branch.getName().equals(branchName)) {
+                    return branch;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -119,6 +147,9 @@ public class CodeServiceImpl implements CodeService {
             if (branchName.equals(Branch.DEFAULT_BRANCH)){
                 branch = new Branch();
                 mBranchRepository.save(branch);
+                Project project = mProjectService.getCurrentByName(projectName);
+                project.getBranches().add(branch.getId());
+                mProjectRepository.save(project);
             }
             else {
                 Branch master = getBranch(projectName, Branch.DEFAULT_BRANCH);
@@ -126,7 +157,10 @@ public class CodeServiceImpl implements CodeService {
                     branch = new Branch();
                     branch.setName(branchName);
                     branch.setLastCommit(master.getLastCommit());
-                    mBranchRepository.save(branch);
+                    branch = mBranchRepository.save(branch);
+                    Project project = mProjectService.getCurrentByName(projectName);
+                    project.getBranches().add(branch.getId());
+                    mProjectRepository.save(project);
                 }
                 else {
                     return null;
@@ -141,8 +175,11 @@ public class CodeServiceImpl implements CodeService {
         Branch branch = getBranch(profileName, projectName, branchName);
         if (branch == null) {
             if (branchName.equals(Branch.DEFAULT_BRANCH)){
-                branch = new Branch();
-                mBranchRepository.save(branch);
+                branch = mBranchRepository.save(new Branch());
+                Project project = mProjectService.getByProfileUsernameAndName(profileName, projectName);
+                project.getBranches().add(branch.getId());
+                mProjectRepository.save(project);
+
             }
             else {
                 Branch master = getBranch(profileName, projectName, Branch.DEFAULT_BRANCH);
@@ -150,7 +187,10 @@ public class CodeServiceImpl implements CodeService {
                     branch = new Branch();
                     branch.setName(branchName);
                     branch.setLastCommit(master.getLastCommit());
-                    mBranchRepository.save(branch);
+                    branch = mBranchRepository.save(branch);
+                    Project project = mProjectService.getByProfileUsernameAndName(profileName, projectName);
+                    project.getBranches().add(branch.getId());
+                    mProjectRepository.save(project);
                 }
                 else {
                     return null;
@@ -166,7 +206,10 @@ public class CodeServiceImpl implements CodeService {
             commit.setMessage(message);
             commit.setAuthor(mProfileService.getCurrent().getUsername());
             commit.setPreviousCommit(branch.getLastCommit());
-            Tree oldTree = getTree(branch.getLastCommit().getCodeRoot());
+            Tree oldTree = null;
+            if (branch.getLastCommit() != null) {
+                oldTree = getTree(branch.getLastCommit().getCodeRoot());
+            }
             Tree newTree = new Tree();
             newTree.setDirName("/");
 
@@ -189,37 +232,41 @@ public class CodeServiceImpl implements CodeService {
                     blob.setFileName(dirs[dirs.length - 1]);
                     blob.setCode(file.getContent());
                     tmp.getBlobs().add(mBlobRepository.insert(blob));
+                    mTreeRepository.save(tmp);
                 }
             }
 
-            // Add other blobs to the structure
-            addFiles(oldTree, newTree);
+            if (oldTree != null) {
+                // Add other blobs to the structure
+                addFiles(oldTree, newTree);
 
-            // Remove unnecessary files
-            for (InputFile file : files) {
-                if (file.getPreviousPath() != null && !file.getPath().equals(file.getPreviousPath())
-                        && file.getPreviousPath().endsWith("/")) {
-                    Tree tmp = newTree;
-                    String[] dirs = file.getPath().split("/");
-                    for (int i = 1; i < dirs.length - 1; i++) {
-                        if (tmp != null) {
-                            tmp = findTree(tmp, dirs[i]);
-                        }
-                        else {
-                            break;
-                        }
-                    }
-                    if (tmp != null) {
-                        for (Blob blob : tmp.getBlobs()) {
-                            if (blob.getFileName().equals(dirs[dirs.length - 1])) {
-                                tmp.getBlobs().remove(blob);
-                                mTreeRepository.save(tmp);
+                // Remove unnecessary files
+                for (InputFile file : files) {
+                    if (file.getPreviousPath() != null && !file.getPath().equals(file.getPreviousPath())
+                            && file.getPreviousPath().endsWith("/")) {
+                        Tree tmp = newTree;
+                        String[] dirs = file.getPath().split("/");
+                        for (int i = 1; i < dirs.length - 1; i++) {
+                            if (tmp != null) {
+                                tmp = findTree(tmp, dirs[i]);
+                            }
+                            else {
                                 break;
+                            }
+                        }
+                        if (tmp != null) {
+                            for (Blob blob : tmp.getBlobs()) {
+                                if (blob.getFileName().equals(dirs[dirs.length - 1])) {
+                                    tmp.getBlobs().remove(blob);
+                                    mTreeRepository.save(tmp);
+                                    break;
+                                }
                             }
                         }
                     }
                 }
             }
+
             commit.setCodeRoot(mTreeRepository.insert(newTree).getId());
             branch.setLastCommit(mCommitRepository.save(commit));
             mBranchRepository.save(branch);
