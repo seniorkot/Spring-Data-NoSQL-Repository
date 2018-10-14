@@ -70,4 +70,17 @@ public class Blob {
     public void setCode(String code) {
         this.code = code;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Blob)) {
+            return false;
+        }
+
+        final Blob other = (Blob) obj;
+        return other.getFileName().equals(this.fileName);
+    }
 }

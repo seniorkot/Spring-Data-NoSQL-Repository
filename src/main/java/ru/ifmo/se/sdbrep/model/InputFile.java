@@ -33,26 +33,35 @@ package ru.ifmo.se.sdbrep.model;
  */
 public class InputFile {
 
-    private String filePath;
-    private String file;
+    private String content;
+    private String path;
+    private String previousPath;
 
     public InputFile() {
 
     }
 
-    public String getFilePath() {
-        return filePath;
+    public String getContent() {
+        return content;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getFile() {
-        return file;
+    public String getPath() {
+        return path;
     }
 
-    public void setFile(String file) {
-        this.file = file;
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getPreviousPath() {
+        return previousPath;
+    }
+
+    public void setPreviousPath(String previousPath) {
+        this.previousPath = previousPath;
     }
 }

@@ -137,8 +137,13 @@ public class CodeController {
     @RequestMapping(path = "/{projectName}/code/{branchName}/commit", method = RequestMethod.POST)
     public ResponseEntity<Void> commit(@PathVariable String projectName,
                                        @PathVariable String branchName,
-                                       @RequestBody List<InputFile> files) {
-        return null;
+                                       @RequestBody List<InputFile> files,
+                                       @RequestParam String message) {
+        if (mCodeService.commit(projectName, branchName, files, message) != null) {
+            // TODO: Log
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -155,7 +160,12 @@ public class CodeController {
     public ResponseEntity<Void> commit(@PathVariable String username,
                                        @PathVariable String projectName,
                                        @PathVariable String branchName,
-                                       @RequestBody List<InputFile> files) {
-        return null;
+                                       @RequestBody List<InputFile> files,
+                                       @RequestParam String message) {
+        if (mCodeService.commit(username, projectName, branchName, files, message) != null) {
+            // TODO: Log
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

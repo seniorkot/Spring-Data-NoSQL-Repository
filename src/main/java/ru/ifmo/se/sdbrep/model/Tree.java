@@ -85,4 +85,17 @@ public class Tree {
     public void setBlobs(List<Blob> blobs) {
         this.blobs = blobs;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Tree)) {
+            return false;
+        }
+
+        final Tree other = (Tree) obj;
+        return other.getDirName().equals(this.dirName);
+    }
 }

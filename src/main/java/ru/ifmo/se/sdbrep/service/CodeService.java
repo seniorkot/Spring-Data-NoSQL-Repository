@@ -25,10 +25,9 @@
 package ru.ifmo.se.sdbrep.service;
 
 import org.springframework.lang.NonNull;
-import ru.ifmo.se.sdbrep.model.Blob;
-import ru.ifmo.se.sdbrep.model.Branch;
-import ru.ifmo.se.sdbrep.model.Commit;
-import ru.ifmo.se.sdbrep.model.Tree;
+import ru.ifmo.se.sdbrep.model.*;
+
+import java.util.List;
 
 /**
  * This interface contains methods that service must implement
@@ -49,4 +48,13 @@ public interface CodeService {
     Branch getBranch(@NonNull Long id);
     Branch getBranch(@NonNull String projectName, @NonNull String branchName);
     Branch getBranch(@NonNull String profileName, @NonNull String projectName, @NonNull String branchName);
+    Commit commit(@NonNull String projectName,
+                  @NonNull String branchName,
+                  @NonNull List<InputFile> files,
+                  @NonNull String message);
+    Commit commit(@NonNull String profileName,
+                  @NonNull String projectName,
+                  @NonNull String branchName,
+                  @NonNull List<InputFile> files,
+                  @NonNull String message);
 }
