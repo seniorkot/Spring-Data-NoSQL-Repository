@@ -97,6 +97,9 @@ public class Tree {
         }
 
         final Tree other = (Tree) obj;
-        return other.getDirName().equals(this.dirName);
+
+        return other.getDirName().equals(this.dirName)
+                && other.getTrees().equals(this.trees)
+                && other.getBlobs().equals(this.blobs);
     }
 }

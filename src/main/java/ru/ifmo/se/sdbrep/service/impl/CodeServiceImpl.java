@@ -32,6 +32,7 @@ import ru.ifmo.se.sdbrep.service.CodeService;
 import ru.ifmo.se.sdbrep.service.ProfileService;
 import ru.ifmo.se.sdbrep.service.ProjectService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -202,15 +203,11 @@ public class CodeServiceImpl implements CodeService {
 
     private Commit createCommit(Branch branch, List<InputFile> files, String message) {
         if (files.size() != 0) {
+            final Tree newTree = new Tree();
             Commit commit = new Commit();
             commit.setMessage(message);
             commit.setAuthor(mProfileService.getCurrent().getUsername());
             commit.setPreviousCommit(branch.getLastCommit());
-            Tree oldTree = null;
-            if (branch.getLastCommit() != null) {
-                oldTree = getTree(branch.getLastCommit().getCodeRoot());
-            }
-            Tree newTree = new Tree();
             newTree.setDirName("/");
 
             // For each input file create and add trees with blobs
@@ -236,38 +233,46 @@ public class CodeServiceImpl implements CodeService {
                 }
             }
 
-            if (oldTree != null) {
+            if (branch.getLastCommit() != null) {
+                final Tree oldTree = getTree(branch.getLastCommit().getCodeRoot());
+
                 // Add other blobs to the structure
                 addFiles(oldTree, newTree);
 
-                // Remove unnecessary files
+                // Remove unnecessary files & dirs
+                List<Tree> addedTrees = new ArrayList<>();
                 for (InputFile file : files) {
-                    if (file.getPreviousPath() != null && !file.getPath().equals(file.getPreviousPath())
-                            && file.getPreviousPath().endsWith("/")) {
+                    if (file.getPreviousPath() != null && !file.getPreviousPath().equals(file.getPath())
+                            && !file.getPreviousPath().endsWith("/")) {
+                        String[] dirs = file.getPreviousPath().split("/");
                         Tree tmp = newTree;
-                        String[] dirs = file.getPath().split("/");
                         for (int i = 1; i < dirs.length - 1; i++) {
-                            if (tmp != null) {
-                                tmp = findTree(tmp, dirs[i]);
+                            Tree tmp2 = findTree(tmp, dirs[i]);
+                            if (tmp2 != null) {
+                                if (addedTrees.remove(tmp2)) {
+                                    mTreeRepository.delete(tmp2);
+                                }
+                                Tree tmp3 = new Tree();
+                                tmp3.setDirName(tmp2.getDirName());
+                                tmp3.setBlobs(tmp2.getBlobs());
+                                tmp3.setTrees(tmp2.getTrees());
+                                tmp3 = mTreeRepository.insert(tmp3);
+                                addedTrees.add(tmp3);
+                                tmp.getTrees().remove(tmp2);
+                                tmp.getTrees().add(tmp3);
+                                tmp = tmp3;
                             }
-                            else {
+                            else  {
                                 break;
                             }
                         }
-                        if (tmp != null) {
-                            for (Blob blob : tmp.getBlobs()) {
-                                if (blob.getFileName().equals(dirs[dirs.length - 1])) {
-                                    tmp.getBlobs().remove(blob);
-                                    mTreeRepository.save(tmp);
-                                    break;
-                                }
-                            }
-                        }
+                        tmp.getBlobs().remove(findBlob(tmp, dirs[dirs.length - 1]));
+                        mTreeRepository.save(tmp);
                     }
                 }
             }
 
-            commit.setCodeRoot(mTreeRepository.insert(newTree).getId());
+            commit.setCodeRoot(mTreeRepository.save(newTree).getId());
             branch.setLastCommit(mCommitRepository.save(commit));
             mBranchRepository.save(branch);
             return commit;
@@ -284,18 +289,27 @@ public class CodeServiceImpl implements CodeService {
         return null;
     }
 
+    private Blob findBlob(Tree root, String blobName) {
+        for (Blob blob : root.getBlobs()) {
+            if (blob.getFileName().equals(blobName)) {
+                return blob;
+            }
+        }
+        return null;
+    }
+
     private void addFiles(Tree oldTree, Tree newTree) {
         for (Blob blob : oldTree.getBlobs()) {
-            if (!newTree.getBlobs().contains(blob)) {
+            if (findBlob(newTree, blob.getFileName()) == null) {
                 newTree.getBlobs().add(blob);
             }
         }
         for (Tree tree : oldTree.getTrees()) {
-            if (!newTree.getTrees().contains(tree)) {
+            Tree subTree = findTree(newTree, tree.getDirName());
+            if (subTree == null) {
                 newTree.getTrees().add(tree);
             }
             else {
-                Tree subTree = newTree.getTrees().get(newTree.getTrees().indexOf(tree));
                 addFiles(tree, subTree);
             }
         }

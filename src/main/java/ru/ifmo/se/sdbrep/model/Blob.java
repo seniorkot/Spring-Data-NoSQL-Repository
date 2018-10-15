@@ -81,6 +81,7 @@ public class Blob {
         }
 
         final Blob other = (Blob) obj;
-        return other.getFileName().equals(this.fileName);
+        return other.getFileName().equals(this.fileName)
+                && other.getCode().equals(this.code);
     }
 }
