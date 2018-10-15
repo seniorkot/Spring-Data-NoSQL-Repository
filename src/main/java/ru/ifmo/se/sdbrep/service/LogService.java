@@ -40,7 +40,7 @@ import java.util.UUID;
 public interface LogService {
 
     /**
-     * Gets and returns certain log defined with an ID.
+     * Gets and returns certain log by ID.
      *
      * @param id Log id
      * @return {@link Log} entity
@@ -55,18 +55,19 @@ public interface LogService {
     List<Log> getAll();
 
     /**
-     * Gets and returns all logs connected to certain
-     * profile and project.
+     * Gets and returns all logs connected with
+     * certain user's profile and project.
      *
      * @param profileId Profile id
      * @param projectId Project id
      * @return List of {@link Log} entities.
      */
-    List<Log> getAll(String profileId, String projectId);
+    List<Log> getAll(String profileId, 
+                     String projectId);
 
     /**
-     * Gets and returns all logs connected to certain
-     * profile.
+     * Gets and returns all logs connected with
+     * certain user's profile.
      *
      * @param profileId Profile id
      * @return List of {@link Log} entities.
@@ -74,8 +75,8 @@ public interface LogService {
     List<Log> getAllByProfileId(String profileId);
 
     /**
-     * Gets and returns all logs connected to certain
-     * project.
+     * Gets and returns all logs connected with
+     * certain project.
      *
      * @param projectId Project id
      * @return List of {@link Log} entities.
@@ -84,23 +85,26 @@ public interface LogService {
 
     /**
      * Creates new log about user actions not connected
-     * to any project (e.g. Registration, changing profile
+     * with any projects (e.g. registration, changing profile
      * info).
      *
      * @param message Log message
      * @param profileId Profile id
-     * @return Created {@link Log} entity
+     * @return Created {@link Log}
      */
-    Log createLog(String message, String profileId);
+    Log createLog(String message, 
+                  String profileId);
 
     /**
      * Creates new log about user actions connected
-     * to a project (e.g. Creating, commit, etc.).
+     * with a project (e.g. creating, commit, etc.).
      *
      * @param message Log message
      * @param profileId Profile id
      * @param projectId Project id
-     * @return Created {@link Log} entity
+     * @return Created {@link Log}
      */
-    Log createLog(String message, String profileId, String projectId);
+    Log createLog(String message, 
+                  String profileId, 
+                  String projectId);
 }

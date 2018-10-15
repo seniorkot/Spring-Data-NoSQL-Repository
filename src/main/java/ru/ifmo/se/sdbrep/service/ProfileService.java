@@ -24,7 +24,6 @@
 
 package ru.ifmo.se.sdbrep.service;
 
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.ifmo.se.sdbrep.model.Profile;
 import ru.ifmo.se.sdbrep.model.Project;
@@ -42,68 +41,72 @@ import ru.ifmo.se.sdbrep.model.Project;
 public interface ProfileService {
 
     /**
-     * Gets and returns current user profile.
+     * Gets and returns current user's profile.
      *
-     * @return {@link Profile} entity of current user
+     * @return {@link Profile} entity
      */
     Profile getCurrent();
 
     /**
-     * Gets and returns profile specified by id.
+     * Gets and returns profile by id.
      *
      * @param id Profile id
      * @return {@link Profile} entity
      */
-    Profile getById(@NonNull String id);
+    Profile getById(String id);
 
     /**
-     * Gets and returns profile specified by username.
+     * Gets and returns profile by username.
      *
      * @param username Profile username
      * @return {@link Profile} entity
      */
-    Profile getByUsername(@NonNull String username);
+    Profile getByUsername(String username);
 
     /**
-     * Gets and returns profile specified by username
+     * Gets and returns profile by username
      * and password.
      *
      * @param username Profile username
      * @param password Profile password
      * @return {@link Profile} entity
      */
-    Profile getByUsernameAndPassword(@NonNull String username, @NonNull String password);
+    Profile getByUsernameAndPassword(String username, 
+                                     String password);
 
     /**
      * Creates new Profile in the system.
      *
      * @param username Profile username
      * @param password Profile password
-     * @return Created {@link Profile} entity
+     * @return Created {@link Profile}
      */
-    Profile create(@NonNull String username, @NonNull String password);
+    Profile create(String username,
+                   String password);
 
     /**
-     * Updates current user profile.
+     * Updates current user's profile.
      *
      * @param profile Profile with new data
-     * @return Updated profile
+     * @return Updated {@link Profile}
      */
-    Profile update(@NonNull Profile profile);
+    Profile update(Profile profile);
 
     /**
-     * Adds new project to current profile.
+     * Adds new project to current user's
+     * profile.
      *
      * @param project Project to add
-     * @return Profile with new projects list
+     * @return Updated {@link Profile}
      */
-    Profile addProject(@NonNull Project project);
+    Profile addProject(Project project);
 
     /**
-     * Removes project from current profile.
+     * Removes project from current user's
+     * profile.
      *
      * @param project Project to add
-     * @return Profile with new projects list
+     * @return Updated {@link Profile}
      */
-    Profile removeProject(@NonNull Project project);
+    Profile removeProject(Project project);
 }

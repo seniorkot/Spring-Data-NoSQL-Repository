@@ -24,7 +24,6 @@
 
 package ru.ifmo.se.sdbrep.service;
 
-import org.springframework.lang.NonNull;
 import ru.ifmo.se.sdbrep.model.*;
 
 import java.util.List;
@@ -40,21 +39,119 @@ import java.util.List;
  */
 public interface CodeService {
 
-    Tree getTree(@NonNull String id);
-    Tree getTree(@NonNull String projectName, @NonNull String branchName);
-    Tree getTree(@NonNull String profileName, @NonNull String projectName, @NonNull String branchName);
-    Blob getBlob(@NonNull String id);
-    Commit getCommit(@NonNull Long id);
-    Branch getBranch(@NonNull Long id);
-    Branch getBranch(@NonNull String projectName, @NonNull String branchName);
-    Branch getBranch(@NonNull String profileName, @NonNull String projectName, @NonNull String branchName);
-    Commit commit(@NonNull String projectName,
-                  @NonNull String branchName,
-                  @NonNull List<InputFile> files,
-                  @NonNull String message);
-    Commit commit(@NonNull String profileName,
-                  @NonNull String projectName,
-                  @NonNull String branchName,
-                  @NonNull List<InputFile> files,
-                  @NonNull String message);
+    /**
+     * Gets and returns tree by ID.
+     *
+     * @param id Tree id
+     * @return {@link Tree} entity
+     */
+    Tree getTree(String id);
+
+    /**
+     * Gets and returns root tree from current
+     * user project's last commit on a certain
+     * branch.
+     *
+     * @param projectName Project name
+     * @param branchName Branch name
+     * @return {@link Tree entity}
+     */
+    Tree getTree(String projectName, 
+                 String branchName);
+
+    /**
+     * Gets and returns root tree from certain
+     * user project's last commit on a certain
+     * branch.
+     *
+     * @param profileName Username
+     * @param projectName Project name
+     * @param branchName Branch name
+     * @return {@link Tree entity}
+     */
+    Tree getTree(String profileName, 
+                 String projectName, 
+                 String branchName);
+
+    /**
+     * Gets and returns blob by ID.
+     *
+     * @param id Blob id
+     * @return {@link Blob} entity
+     */
+    Blob getBlob(String id);
+
+    /**
+     * Gets and returns commit by ID.
+     *
+     * @param id Commit id
+     * @return {@link Commit} entity
+     */
+    Commit getCommit(Long id);
+
+    /**
+     * Gets and returns branch by ID.
+     *
+     * @param id Branch id
+     * @return {@link Branch} entity
+     */
+    Branch getBranch(Long id);
+
+    /**
+     * Gets and returns current user
+     * project's branch by its name and
+     * by project name.
+     *
+     * @param projectName Project name
+     * @param branchName Branch name
+     * @return {@link Branch} entity
+     */
+    Branch getBranch(String projectName, 
+                     String branchName);
+
+    /**
+     * Gets and returns certain user
+     * project's branch by its name and
+     * by project name.
+     *
+     * @param profileName Username
+     * @param projectName Project name
+     * @param branchName Branch name
+     * @return {@link Branch} entity
+     */
+    Branch getBranch(String profileName, 
+                     String projectName, 
+                     String branchName);
+
+    /**
+     * Creates new commit in current user's
+     * project on certain branch.
+     *
+     * @param projectName Project name
+     * @param branchName Branch name
+     * @param files Modified files
+     * @param message Commit message
+     * @return Crated {@link Commit}
+     */
+    Commit commit(String projectName,
+                  String branchName,
+                  List<InputFile> files,
+                  String message);
+
+    /**
+     * Creates new commit in certain user's
+     * project on certain branch.
+     *
+     * @param profileName Username
+     * @param projectName Project name
+     * @param branchName Branch name
+     * @param files Modified files
+     * @param message Commit message
+     * @return Crated {@link Commit}
+     */
+    Commit commit(String profileName,
+                  String projectName,
+                  String branchName,
+                  List<InputFile> files,
+                  String message);
 }

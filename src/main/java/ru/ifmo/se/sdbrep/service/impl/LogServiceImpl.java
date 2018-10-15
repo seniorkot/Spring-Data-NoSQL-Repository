@@ -25,6 +25,7 @@
 package ru.ifmo.se.sdbrep.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import ru.ifmo.se.sdbrep.model.Log;
 import ru.ifmo.se.sdbrep.repository.LogRepository;
