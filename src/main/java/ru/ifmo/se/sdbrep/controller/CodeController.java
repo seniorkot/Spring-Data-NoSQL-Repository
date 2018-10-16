@@ -29,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.se.sdbrep.model.Branch;
+import ru.ifmo.se.sdbrep.model.Commit;
 import ru.ifmo.se.sdbrep.model.InputFile;
 import ru.ifmo.se.sdbrep.model.Tree;
 import ru.ifmo.se.sdbrep.service.CodeService;
@@ -132,6 +133,7 @@ public class CodeController {
      * @param projectName Project name
      * @param branchName Branch name
      * @param files Files to modify
+     * @param message Commit message
      * @return 200 - OK, 400 - Bad request
      */
     @RequestMapping(path = "/{projectName}/code/{branchName}/commit", method = RequestMethod.POST)
@@ -154,6 +156,7 @@ public class CodeController {
      * @param projectName Project name
      * @param branchName Branch name
      * @param files Files to modify
+     * @param message Commit message
      * @return 200 - OK, 400 - Bad request
      */
     @RequestMapping(path = "/profile/{username}/{projectName}/code/{branchName}/commit", method = RequestMethod.POST)
@@ -165,6 +168,44 @@ public class CodeController {
         if (mCodeService.commit(username, projectName, branchName, files, message) != null) {
             // TODO: Log
             return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * This endpoint gets the last commit in current user's project
+     * certain branch.
+     *
+     * @param projectName Project name
+     * @param branchName Branch name
+     * @return 200 - OK, 400 - Bad request
+     */
+    @RequestMapping(path = "/{projectName}/code/{branchName}/commit", method = RequestMethod.GET)
+    public ResponseEntity<Commit> getCommit(@PathVariable String projectName,
+                                            @PathVariable String branchName) {
+        Commit commit;
+        if ((commit = mCodeService.getCommit(projectName, branchName)) != null) {
+            return new ResponseEntity<>(commit, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * This endpoint gets the last commit in certain user's project
+     * specified by branch name.
+     *
+     * @param username Username
+     * @param projectName Project name
+     * @param branchName Branch name
+     * @return 200 - OK, 400 - Bad request
+     */
+    @RequestMapping(path = "/profile/{username}/{projectName}/code/{branchName}/commit", method = RequestMethod.GET)
+    public ResponseEntity<Commit> getCommit(@PathVariable String username,
+                                            @PathVariable String projectName,
+                                            @PathVariable String branchName) {
+        Commit commit;
+        if ((commit = mCodeService.getCommit(username, projectName, branchName)) != null) {
+            return new ResponseEntity<>(commit, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

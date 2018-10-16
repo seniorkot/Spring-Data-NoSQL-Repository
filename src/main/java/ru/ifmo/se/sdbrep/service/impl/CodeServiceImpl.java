@@ -107,6 +107,24 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Override
+    public Commit getCommit(String projectName, String branchName) {
+        Branch branch = getBranch(projectName, branchName);
+        if (branch != null) {
+            return branch.getLastCommit();
+        }
+        return null;
+    }
+
+    @Override
+    public Commit getCommit(String profileName, String projectName, String branchName) {
+        Branch branch = getBranch(profileName, projectName, branchName);
+        if (branch != null) {
+            return branch.getLastCommit();
+        }
+        return null;
+    }
+
+    @Override
     public Branch getBranch(Long id) {
         return mBranchRepository.findById(id).orElse(null);
     }

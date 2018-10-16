@@ -27,29 +27,23 @@ package ru.ifmo.se.sdbrep.model;
 import org.neo4j.ogm.annotation.*;
 
 /**
- * This class is used as commit entity.
- *
- * @author seniorkot
- * @version 1.0
- * @since 1.0
+ * This entity is used as Commit relationship
+ * entity.
  */
-@NodeEntity
-public class Commit {
+@RelationshipEntity(type = "COMMIT_HISTORY")
+public class CommitHistory {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private String author;
-    private String message;
-
-    // TODO: Fix relationship
-    @Relationship(type = "COMMIT", direction = Relationship.INCOMING)
+    @StartNode
     private Commit previousCommit;
 
-    private String codeRoot;
+    @EndNode
+    private Commit nextCommit;
 
-    public Commit() {
+    public CommitHistory() {
 
     }
 
@@ -61,35 +55,19 @@ public class Commit {
         this.id = id;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public Commit getPreviousCommit() {
         return previousCommit;
     }
 
-    public void setPreviousCommit (Commit previousCommit) {
+    public void setPreviousCommit(Commit previousCommit) {
         this.previousCommit = previousCommit;
     }
 
-    public String getCodeRoot() {
-        return codeRoot;
+    public Commit getNextCommit() {
+        return nextCommit;
     }
 
-    public void setCodeRoot(String codeRoot) {
-        this.codeRoot = codeRoot;
+    public void setNextCommit(Commit nextCommit) {
+        this.nextCommit = nextCommit;
     }
 }

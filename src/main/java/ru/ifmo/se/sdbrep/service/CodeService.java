@@ -90,6 +90,30 @@ public interface CodeService {
     Commit getCommit(Long id);
 
     /**
+     * Gets and returns last commit from current
+     * user project's branch specified by name.
+     *
+     * @param projectName Project name
+     * @param branchName Branch name
+     * @return {@link Commit entity}
+     */
+    Commit getCommit(String projectName,
+                     String branchName);
+
+    /**
+     * Gets and returns last commit from certain
+     * user project's branch specified by name.
+     *
+     * @param profileName Username
+     * @param projectName Project name
+     * @param branchName Branch name
+     * @return {@link Commit entity}
+     */
+    Commit getCommit(String profileName,
+                     String projectName,
+                     String branchName);
+
+    /**
      * Gets and returns branch by ID.
      *
      * @param id Branch id
