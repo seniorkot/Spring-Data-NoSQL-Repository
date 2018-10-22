@@ -109,19 +109,13 @@ public class CodeServiceImpl implements CodeService {
     @Override
     public Commit getCommit(String projectName, String branchName) {
         Branch branch = getBranch(projectName, branchName);
-        if (branch != null) {
-            return branch.getLastCommit();
-        }
-        return null;
+        return branch == null ? null : branch.getLastCommit();
     }
 
     @Override
     public Commit getCommit(String profileName, String projectName, String branchName) {
         Branch branch = getBranch(profileName, projectName, branchName);
-        if (branch != null) {
-            return branch.getLastCommit();
-        }
-        return null;
+        return branch == null ? null : branch.getLastCommit();
     }
 
     @Override
@@ -132,91 +126,45 @@ public class CodeServiceImpl implements CodeService {
     @Override
     public Branch getBranch(String projectName, String branchName) {
         Project project = mProjectService.getCurrentByName(projectName);
-        if (project != null) {
-            List<Long> branchIds = project.getBranches();
-            Iterable<Branch> branches = mBranchRepository.findAllById(branchIds);
-            for (Branch branch : branches) {
-                if (branch.getName().equals(branchName)) {
-                    return branch;
-                }
-            }
-        }
-        return null;
+        return findBranch(project, branchName);
     }
 
     @Override
     public Branch getBranch(String profileName, String projectName, String branchName) {
         Project project = mProjectService.getByProfileUsernameAndName(profileName, projectName);
-        if (project != null) {
-            List<Long> branchIds = project.getBranches();
-            Iterable<Branch> branches = mBranchRepository.findAllById(branchIds);
-            for (Branch branch : branches) {
-                if (branch.getName().equals(branchName)) {
-                    return branch;
-                }
-            }
-        }
-        return null;
+        return findBranch(project, branchName);
+    }
+
+    @Override
+    public Branch createBranch(String projectName, String parentBranchName, String branchName) {
+        Project project = mProjectService.getCurrentByName(projectName);
+        return createBranch(project, parentBranchName, branchName);
+    }
+
+    @Override
+    public Branch createBranch(String profileName, String projectName, String parentBranchName, String branchName) {
+        Project project = mProjectService.getByProfileUsernameAndName(profileName, projectName);
+        return createBranch(project, parentBranchName, branchName);
     }
 
     @Override
     public Commit commit(String projectName, String branchName, List<InputFile> files, String message) {
-        Branch branch = getBranch(projectName, branchName);
+        Project project = mProjectService.getCurrentByName(projectName);
+        Branch branch = findBranch(project, branchName);
         if (branch == null) {
-            if (branchName.equals(Branch.DEFAULT_BRANCH)){
-                branch = new Branch();
-                mBranchRepository.save(branch);
-                Project project = mProjectService.getCurrentByName(projectName);
-                project.getBranches().add(branch.getId());
-                mProjectRepository.save(project);
-            }
-            else {
-                Branch master = getBranch(projectName, Branch.DEFAULT_BRANCH);
-                if (master != null) {
-                    branch = new Branch();
-                    branch.setName(branchName);
-                    branch.setLastCommit(master.getLastCommit());
-                    branch = mBranchRepository.save(branch);
-                    Project project = mProjectService.getCurrentByName(projectName);
-                    project.getBranches().add(branch.getId());
-                    mProjectRepository.save(project);
-                }
-                else {
-                    return null;
-                }
-            }
+            branch = createBranch(project, null, branchName);
         }
-        return createCommit(branch, files, message);
+        return branch == null ? null : createCommit(branch, files, message);
     }
 
     @Override
     public Commit commit(String profileName, String projectName, String branchName, List<InputFile> files, String message) {
-        Branch branch = getBranch(profileName, projectName, branchName);
+        Project project = mProjectService.getByProfileUsernameAndName(profileName, projectName);
+        Branch branch = findBranch(project, branchName);
         if (branch == null) {
-            if (branchName.equals(Branch.DEFAULT_BRANCH)){
-                branch = mBranchRepository.save(new Branch());
-                Project project = mProjectService.getByProfileUsernameAndName(profileName, projectName);
-                project.getBranches().add(branch.getId());
-                mProjectRepository.save(project);
-
-            }
-            else {
-                Branch master = getBranch(profileName, projectName, Branch.DEFAULT_BRANCH);
-                if (master != null) {
-                    branch = new Branch();
-                    branch.setName(branchName);
-                    branch.setLastCommit(master.getLastCommit());
-                    branch = mBranchRepository.save(branch);
-                    Project project = mProjectService.getByProfileUsernameAndName(profileName, projectName);
-                    project.getBranches().add(branch.getId());
-                    mProjectRepository.save(project);
-                }
-                else {
-                    return null;
-                }
-            }
+            branch = createBranch(project, null, branchName);
         }
-        return createCommit(branch, files, message);
+        return branch == null ? null : createCommit(branch, files, message);
     }
 
     private Commit createCommit(Branch branch, List<InputFile> files, String message) {
@@ -294,6 +242,47 @@ public class CodeServiceImpl implements CodeService {
             branch.setLastCommit(mCommitRepository.save(commit));
             mBranchRepository.save(branch);
             return commit;
+        }
+        return null;
+    }
+
+    private Branch findBranch(Project project, String branchName) {
+        if (project != null) {
+            List<Long> branchIds = project.getBranches();
+            Iterable<Branch> branches = mBranchRepository.findAllById(branchIds);
+            for (Branch branch : branches) {
+                if (branch.getName().equals(branchName)) {
+                    return branch;
+                }
+            }
+        }
+        return null;
+    }
+
+    private Branch createBranch(Project project, String parentBranchName, String branchName) {
+        Branch newBranch = findBranch(project, branchName);
+        Branch parentBranch;
+        if (newBranch == null) {
+            if (parentBranchName != null) {
+                parentBranch = findBranch(project, parentBranchName);
+                if (parentBranch != null) {
+                    newBranch = new Branch();
+                    newBranch.setName(branchName);
+                    newBranch.setLastCommit(parentBranch.getLastCommit());
+                    newBranch = mBranchRepository.save(newBranch);
+                    project.getBranches().add(newBranch.getId());
+                    mProjectRepository.save(project);
+                    return newBranch;
+                }
+            }
+            else if (branchName.equals(Branch.DEFAULT_BRANCH)) {
+                newBranch = new Branch();
+                newBranch.setName(Branch.DEFAULT_BRANCH);
+                newBranch = mBranchRepository.save(newBranch);
+                project.getBranches().add(newBranch.getId());
+                mProjectRepository.save(project);
+                return newBranch;
+            }
         }
         return null;
     }

@@ -51,9 +51,6 @@ public class AuthController {
     @Autowired
     private ProfileService mProfileService;
 
-    @Autowired
-    private LogService mLogService;
-
     /**
      * This endpoint authorizes user in the system.
      *
@@ -62,7 +59,8 @@ public class AuthController {
      * @return 200 - OK, 400 - User doesn't exist, 401 - Invalid password
      */
     @RequestMapping(path = "/api/login", method = RequestMethod.POST)
-    public ResponseEntity<Void> login(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<Void> login(@RequestParam String username,
+                                      @RequestParam String password) {
         Profile profile = mProfileService.getByUsernameAndPassword(username, password);
         if (profile != null) {
             SecurityContextHolder.getContext().setAuthentication(
@@ -84,13 +82,13 @@ public class AuthController {
      * @return 200 - OK, 409 - Conflict situation (user exists), 500 - Internal error
      */
     @RequestMapping(path = "/api/signUp", method = RequestMethod.POST)
-    public ResponseEntity<Void> signUp(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<Void> signUp(@RequestParam String username,
+                                       @RequestParam String password) {
         Profile profile = mProfileService.create(username, password);
         if (profile != null){
             SecurityContextHolder.getContext().setAuthentication(
                     new UsernamePasswordAuthenticationToken(profile.getId(),
                             profile.getPassword(), profile.getAuthorities()));
-            mLogService.createLog("has registered", profile.getId());
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else if (mProfileService.getByUsername(username) != null) {

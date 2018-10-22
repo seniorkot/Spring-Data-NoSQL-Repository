@@ -147,6 +147,35 @@ public interface CodeService {
                      String projectName, 
                      String branchName);
 
+
+    /**
+     * Creates new branch in current user's
+     * project.
+     *
+     * @param projectName Project name
+     * @param parentBranchName Parent branch name
+     * @param branchName New branch name
+     * @return Created {@link Branch}
+     */
+    Branch createBranch(String projectName,
+                        String parentBranchName,
+                        String branchName);
+
+    /**
+     * Creates new branch in concrete user's
+     * project.
+     *
+     * @param profileName Username
+     * @param projectName Project name
+     * @param parentBranchName Parent branch name
+     * @param branchName New branch name
+     * @return Created {@link Branch}
+     */
+    Branch createBranch(String profileName,
+                        String projectName,
+                        String parentBranchName,
+                        String branchName);
+
     /**
      * Creates new commit in current user's
      * project on certain branch.

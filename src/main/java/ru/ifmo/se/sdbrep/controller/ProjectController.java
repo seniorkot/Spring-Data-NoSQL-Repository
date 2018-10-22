@@ -29,8 +29,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.se.sdbrep.model.Project;
-import ru.ifmo.se.sdbrep.service.LogService;
-import ru.ifmo.se.sdbrep.service.ProfileService;
 import ru.ifmo.se.sdbrep.service.ProjectService;
 
 import java.util.List;
@@ -49,16 +47,10 @@ import java.util.List;
 public class ProjectController {
 
     @Autowired
-    private ProfileService mProfileService;
-
-    @Autowired
     private ProjectService mProjectService;
 
-    @Autowired
-    private LogService mLogService;
-
     /**
-     * This endpoint gets all current user's profile projects.
+     * This endpoint returns all current user's profile projects.
      *
      * @return 200 - OK
      */
@@ -68,7 +60,7 @@ public class ProjectController {
     }
 
     /**
-     * This endpoint gets all concrete user's profile projects.
+     * This endpoint returns all concrete user's profile projects.
      *
      * @param username Profile name
      * @return 200 - OK
@@ -79,8 +71,24 @@ public class ProjectController {
     }
 
     /**
-     * This endpoint gets concrete user's profile project
-     * specified by project name.
+     * This endpoint returns current user's profile project
+     * by project name.
+     *
+     * @param projectName Project name
+     * @return 200 - OK, 404 - Project not found
+     */
+    @RequestMapping(path = "/{projectName}", method = RequestMethod.GET)
+    public ResponseEntity<Project> getProject(@PathVariable String projectName) {
+        Project project = mProjectService.getCurrentByName(projectName);
+        if (project != null) {
+            return new ResponseEntity<>(project, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * This endpoint returns concrete user's profile project
+     * by project name.
      *
      * @param username Profile name
      * @param projectName Project name
@@ -97,22 +105,6 @@ public class ProjectController {
     }
 
     /**
-     * This endpoint gets current user's profile project
-     * specified by project name.
-     *
-     * @param projectName Project name
-     * @return 200 - OK, 404 - Project not found
-     */
-    @RequestMapping(path = "/{projectName}", method = RequestMethod.GET)
-    public ResponseEntity<Project> getProject(@PathVariable String projectName) {
-        Project project = mProjectService.getCurrentByName(projectName);
-        if (project != null) {
-            return new ResponseEntity<>(project, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    /**
      * This endpoint creates new project in current
      * user's profile.
      *
@@ -121,18 +113,14 @@ public class ProjectController {
      */
     @RequestMapping(path = "/{projectName}", method = RequestMethod.POST)
     public ResponseEntity<Void> createProject(@PathVariable String projectName) {
-        Project project = mProjectService.create(projectName);
-        if (project != null) {
-            mLogService.createLog("has created project",
-                    mProfileService.getCurrent().getId(), project.getId());
+        if (mProjectService.create(projectName) != null) {
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /**
-     * This endpoint updates current user's profile project
-     * specified by project name.
+     * This endpoint updates current user's profile project.
      *
      * @param projectName Project name
      * @param project Project data to update
@@ -141,10 +129,7 @@ public class ProjectController {
     @RequestMapping(path = "/{projectName}", method = RequestMethod.PUT)
     public ResponseEntity<Void> updateProject(@PathVariable String projectName,
                                               @RequestBody Project project) {
-        Project currentProject = mProjectService.update(projectName, project);
-        if (currentProject != null) {
-            mLogService.createLog("has updated project",
-                    mProfileService.getCurrent().getId(), currentProject.getId());
+        if (mProjectService.update(projectName, project) != null) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -152,7 +137,7 @@ public class ProjectController {
 
     /**
      * This endpoint deletes current user's profile project
-     * specified by project name.
+     * by project name.
      *
      * @param projectName Project name
      * @return 200 - OK, 404 - Project not found
@@ -161,8 +146,6 @@ public class ProjectController {
     public ResponseEntity<Void> deleteProject(@PathVariable String projectName) {
         Project project = mProjectService.getCurrentByName(projectName);
         if (project != null) {
-            mLogService.createLog("has deleted project",
-                    mProfileService.getCurrent().getId(), project.getId());
             mProjectService.delete(project);
             return new ResponseEntity<>(HttpStatus.OK);
         }

@@ -29,7 +29,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.se.sdbrep.model.Profile;
-import ru.ifmo.se.sdbrep.service.LogService;
 import ru.ifmo.se.sdbrep.service.ProfileService;
 
 /**
@@ -48,9 +47,6 @@ public class ProfileController {
     @Autowired
     private ProfileService mProfileService;
 
-    @Autowired
-    private LogService mLogService;
-
     /**
      * This endpoint returns current profile.
      *
@@ -68,8 +64,7 @@ public class ProfileController {
     }
 
     /**
-     * This endpoint returns user profile specified by
-     * username.
+     * This endpoint returns user profile by username.
      *
      * @param username Username
      * @return {@link Profile} entity and response code (200 - OK, 404 - User not found)
@@ -95,7 +90,6 @@ public class ProfileController {
     public ResponseEntity<Void> updateProfile(@RequestBody Profile profile) {
         Profile currentProfile = mProfileService.update(profile);
         if (currentProfile != null) {
-            mLogService.createLog("has updated profile info", currentProfile.getId());
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

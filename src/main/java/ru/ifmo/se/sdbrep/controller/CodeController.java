@@ -33,7 +33,6 @@ import ru.ifmo.se.sdbrep.model.Commit;
 import ru.ifmo.se.sdbrep.model.InputFile;
 import ru.ifmo.se.sdbrep.model.Tree;
 import ru.ifmo.se.sdbrep.service.CodeService;
-import ru.ifmo.se.sdbrep.service.LogService;
 
 import java.util.List;
 
@@ -52,12 +51,9 @@ public class CodeController {
     @Autowired
     private CodeService mCodeService;
 
-    @Autowired
-    private LogService mLogService;
-
     /**
-     * This endpoint returns code root tree at last commit on current
-     * user's project branch.
+     * This endpoint returns code root tree from last commit in current
+     * user's project on default branch.
      *
      * @param projectName Project name
      * @return 200 - OK, 400 - Bad request
@@ -72,8 +68,8 @@ public class CodeController {
     }
 
     /**
-     * This endpoint returns code root tree at last commit on current
-     * user's project branch.
+     * This endpoint returns code root tree from last commit in current
+     * user's project on default branch.
      *
      * @param projectName Project name
      * @param branchName Branch name
@@ -90,8 +86,8 @@ public class CodeController {
     }
 
     /**
-     * This endpoint returns root tree at last commit on project
-     * branch.
+     * This endpoint returns root tree from last commit in current
+     * user's project on concrete branch.
      *
      * @param username Username
      * @param projectName Project name
@@ -108,8 +104,8 @@ public class CodeController {
     }
 
     /**
-     * This endpoint returns root tree at last commit on project
-     * branch.
+     * This endpoint returns root tree from last commit on concrete
+     * project branch.
      *
      * @param username Username
      * @param projectName Project name
@@ -136,21 +132,19 @@ public class CodeController {
      * @param message Commit message
      * @return 200 - OK, 400 - Bad request
      */
-    @RequestMapping(path = "/{projectName}/code/{branchName}/commit", method = RequestMethod.POST)
+    @RequestMapping(path = "/{projectName}/commit/{branchName}", method = RequestMethod.POST)
     public ResponseEntity<Void> commit(@PathVariable String projectName,
                                        @PathVariable String branchName,
                                        @RequestBody List<InputFile> files,
                                        @RequestParam String message) {
         if (mCodeService.commit(projectName, branchName, files, message) != null) {
-            // TODO: Log
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /**
-     * This endpoint creates new commit in the project
-     * specified by username and project name.
+     * This endpoint creates new commit in the project.
      *
      * @param username Username
      * @param projectName Project name
@@ -159,14 +153,13 @@ public class CodeController {
      * @param message Commit message
      * @return 200 - OK, 400 - Bad request
      */
-    @RequestMapping(path = "/profile/{username}/{projectName}/code/{branchName}/commit", method = RequestMethod.POST)
+    @RequestMapping(path = "/profile/{username}/{projectName}/commit/{branchName}", method = RequestMethod.POST)
     public ResponseEntity<Void> commit(@PathVariable String username,
                                        @PathVariable String projectName,
                                        @PathVariable String branchName,
                                        @RequestBody List<InputFile> files,
                                        @RequestParam String message) {
         if (mCodeService.commit(username, projectName, branchName, files, message) != null) {
-            // TODO: Log
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -174,13 +167,13 @@ public class CodeController {
 
     /**
      * This endpoint gets the last commit in current user's project
-     * certain branch.
+     * on concrete branch.
      *
      * @param projectName Project name
      * @param branchName Branch name
      * @return 200 - OK, 400 - Bad request
      */
-    @RequestMapping(path = "/{projectName}/code/{branchName}/commit", method = RequestMethod.GET)
+    @RequestMapping(path = "/{projectName}/commit/{branchName}", method = RequestMethod.GET)
     public ResponseEntity<Commit> getCommit(@PathVariable String projectName,
                                             @PathVariable String branchName) {
         Commit commit;
@@ -192,14 +185,14 @@ public class CodeController {
 
     /**
      * This endpoint gets the last commit in certain user's project
-     * specified by branch name.
+     * on concrete branch.
      *
      * @param username Username
      * @param projectName Project name
      * @param branchName Branch name
      * @return 200 - OK, 400 - Bad request
      */
-    @RequestMapping(path = "/profile/{username}/{projectName}/code/{branchName}/commit", method = RequestMethod.GET)
+    @RequestMapping(path = "/profile/{username}/{projectName}/commit/{branchName}", method = RequestMethod.GET)
     public ResponseEntity<Commit> getCommit(@PathVariable String username,
                                             @PathVariable String projectName,
                                             @PathVariable String branchName) {

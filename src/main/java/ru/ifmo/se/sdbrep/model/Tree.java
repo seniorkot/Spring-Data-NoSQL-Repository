@@ -46,6 +46,7 @@ public class Tree {
 
     private String dirName;
 
+    @DBRef
     private List<Tree> trees = new ArrayList<>();
 
     @DBRef
