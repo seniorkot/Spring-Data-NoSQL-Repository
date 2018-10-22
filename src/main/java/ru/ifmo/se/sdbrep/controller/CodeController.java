@@ -124,6 +124,48 @@ public class CodeController {
     }
 
     /**
+     * This endpoint creates new branch above existing one
+     * in current user's project.
+     *
+     * @param projectName Project name
+     * @param branchName Existing branch name
+     * @param newBranchName New branch name
+     * @return 200 - OK, 400 - Bad request
+     */
+    @RequestMapping(path = "/{projectName}/branch/{branchName}/{newBranchName}", method = RequestMethod.POST)
+    public ResponseEntity<Void> createBranch(@PathVariable String projectName,
+                                             @PathVariable String branchName,
+                                             @PathVariable String newBranchName) {
+        Branch newBranch = mCodeService.createBranch(projectName, branchName, newBranchName);
+        if (newBranch != null) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * This endpoint creates new branch above existing one
+     * in concrete user's project.
+     *
+     * @param username Username
+     * @param projectName Project name
+     * @param branchName Existing branch name
+     * @param newBranchName New branch name
+     * @return 200 - OK, 400 - Bad request
+     */
+    @RequestMapping(path = "/profile/{username}/{projectName}/branch/{branchName}/{newBranchName}", method = RequestMethod.POST)
+    public ResponseEntity<Void> createBranch(@PathVariable String username,
+                                             @PathVariable String projectName,
+                                             @PathVariable String branchName,
+                                             @PathVariable String newBranchName) {
+        Branch newBranch = mCodeService.createBranch(username, projectName, branchName, newBranchName);
+        if (newBranch != null) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
      * This endpoint creates new commit in current user's project.
      *
      * @param projectName Project name

@@ -39,5 +39,4 @@ import java.util.List;
  */
 public interface BranchRepository extends Neo4jRepository<Branch, Long> {
 
-    Branch findByIdInAndName(List<Long> ids, String name);
 }

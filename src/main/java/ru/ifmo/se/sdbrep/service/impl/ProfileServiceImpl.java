@@ -35,6 +35,7 @@ import ru.ifmo.se.sdbrep.config.SecurityConfig;
 import ru.ifmo.se.sdbrep.model.Profile;
 import ru.ifmo.se.sdbrep.model.Project;
 import ru.ifmo.se.sdbrep.repository.ProfileRepository;
+import ru.ifmo.se.sdbrep.service.LogService;
 import ru.ifmo.se.sdbrep.service.ProfileService;
 
 import java.util.Optional;
@@ -53,6 +54,9 @@ public class ProfileServiceImpl implements ProfileService, UserDetailsService {
 
     @Autowired
     private ProfileRepository mProfileRepository;
+
+    @Autowired
+    private LogService mLogService;
 
     @Override
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
@@ -91,8 +95,10 @@ public class ProfileServiceImpl implements ProfileService, UserDetailsService {
     @Override
     public Profile create(@NonNull String username, @NonNull String password) {
         if (loadUserByUsername(username) == null) {
-            Profile profile = new Profile(username, password, new String[]{SecurityConfig.Roles.ROLE_USER});
-            return mProfileRepository.insert(profile);
+            Profile profile = mProfileRepository
+                    .insert(new Profile(username, password, new String[]{SecurityConfig.Roles.ROLE_USER}));
+            mLogService.createLog("Has registered", profile.getId());
+            return profile;
         }
         return null;
     }
@@ -121,6 +127,7 @@ public class ProfileServiceImpl implements ProfileService, UserDetailsService {
             if (profile.getBio() != null) {
                 currentProfile.setBio(profile.getBio());
             }
+            mLogService.createLog("Has updated profile info", currentProfile.getId());
             return mProfileRepository.save(currentProfile);
         }
         return null;

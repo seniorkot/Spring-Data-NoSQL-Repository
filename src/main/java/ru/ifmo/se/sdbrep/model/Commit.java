@@ -43,7 +43,7 @@ public class Commit {
     private String author;
     private String message;
 
-    // TODO: Fix relationship
+    // TODO: Previous commit is null (not in DB). Fix somehow.
     @Relationship(type = "COMMIT", direction = Relationship.INCOMING)
     private Commit previousCommit;
 

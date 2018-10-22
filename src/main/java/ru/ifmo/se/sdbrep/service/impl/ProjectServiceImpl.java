@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import ru.ifmo.se.sdbrep.model.Profile;
 import ru.ifmo.se.sdbrep.model.Project;
 import ru.ifmo.se.sdbrep.repository.ProjectRepository;
+import ru.ifmo.se.sdbrep.service.LogService;
 import ru.ifmo.se.sdbrep.service.ProfileService;
 import ru.ifmo.se.sdbrep.service.ProjectService;
 
@@ -52,6 +53,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private ProfileService mProfileService;
+
+    @Autowired
+    private LogService mLogService;
 
     @Override
     public Project getById(@NonNull String id) {
@@ -105,6 +109,8 @@ public class ProjectServiceImpl implements ProjectService {
             project.setName(name);
             project = mProjectRepository.insert(project);
             mProfileService.addProject(project);
+            mLogService.createLog("Has created project",
+                    mProfileService.getCurrent().getId(), project.getId());
             return project;
         }
         return null;
@@ -125,6 +131,8 @@ public class ProjectServiceImpl implements ProjectService {
             if (project.getInfo() != null) {
                 selectedProject.setInfo(project.getInfo());
             }
+            mLogService.createLog("Has updated project",
+                    mProfileService.getCurrent().getId(), project.getId());
             return mProjectRepository.save(selectedProject);
         }
         return null;
@@ -134,6 +142,8 @@ public class ProjectServiceImpl implements ProjectService {
     public void delete(Project project) {
         mProfileService.removeProject(project);
         mProjectRepository.delete(project);
+        mLogService.createLog("Has deleted project",
+                mProfileService.getCurrent().getId(), project.getId());
     }
 
     @Override
@@ -142,8 +152,10 @@ public class ProjectServiceImpl implements ProjectService {
         Profile collaborator = mProfileService.getByUsername(collaboratorName);
         if (project != null && collaborator != null) {
             if (!project.getCollaborators().contains(collaborator) &&
-                    !mProfileService.getCurrent().getUsername().equals(collaboratorName)) {
+                    !mProfileService.getCurrent().equals(collaborator)) {
                 project.getCollaborators().add(collaborator);
+                mLogService.createLog("Has added " + collaboratorName + " as collaborator",
+                        mProfileService.getCurrent().getId(), project.getId());
                 return mProjectRepository.save(project);
             }
             return null;
@@ -157,6 +169,8 @@ public class ProjectServiceImpl implements ProjectService {
         Profile collaborator = mProfileService.getByUsername(collaboratorName);
         if (project != null && collaborator != null && project.getCollaborators().contains(collaborator)) {
             project.getCollaborators().remove(collaborator);
+            mLogService.createLog("Has removed " + collaboratorName + " from collaborators",
+                    mProfileService.getCurrent().getId(), project.getId());
             return mProjectRepository.save(project);
         }
         return null;

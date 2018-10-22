@@ -24,6 +24,7 @@
 
 package ru.ifmo.se.sdbrep.repository;
 
+import org.springframework.data.cassandra.repository.AllowFiltering;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import ru.ifmo.se.sdbrep.model.Log;
 
@@ -40,7 +41,12 @@ import java.util.UUID;
  */
 public interface LogRepository extends CassandraRepository<Log, UUID> {
 
+    @AllowFiltering
     List<Log> findAllByProfileIdAndProjectId(String profileId, String projectId);
+
+    @AllowFiltering
     List<Log> findAllByProfileId(String profileId);
+
+    @AllowFiltering
     List<Log> findAllByProjectId(String projectId);
 }

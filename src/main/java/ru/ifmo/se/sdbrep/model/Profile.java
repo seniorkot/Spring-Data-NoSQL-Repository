@@ -161,4 +161,18 @@ public class Profile implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Profile)) {
+            return false;
+        }
+
+        final Profile other = (Profile) obj;
+
+        return other.getUsername().equals(this.username);
+    }
 }

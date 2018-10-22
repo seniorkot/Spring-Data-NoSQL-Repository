@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import ru.ifmo.se.sdbrep.model.*;
 import ru.ifmo.se.sdbrep.repository.*;
 import ru.ifmo.se.sdbrep.service.CodeService;
+import ru.ifmo.se.sdbrep.service.LogService;
 import ru.ifmo.se.sdbrep.service.ProfileService;
 import ru.ifmo.se.sdbrep.service.ProjectService;
 
@@ -66,6 +67,9 @@ public class CodeServiceImpl implements CodeService {
 
     @Autowired
     private ProfileService mProfileService;
+
+    @Autowired
+    private LogService mLogService;
 
     @Override
     public Tree getTree(String id) {
@@ -138,13 +142,26 @@ public class CodeServiceImpl implements CodeService {
     @Override
     public Branch createBranch(String projectName, String parentBranchName, String branchName) {
         Project project = mProjectService.getCurrentByName(projectName);
-        return createBranch(project, parentBranchName, branchName);
+        Branch branch = createBranch(project, parentBranchName, branchName);
+        if (branch != null) {
+            mLogService.createLog("Has created new branch \"" + branchName + "\"",
+                    mProfileService.getCurrent().getId(), project.getId());
+        }
+        return branch;
     }
 
     @Override
     public Branch createBranch(String profileName, String projectName, String parentBranchName, String branchName) {
         Project project = mProjectService.getByProfileUsernameAndName(profileName, projectName);
-        return createBranch(project, parentBranchName, branchName);
+        if (!project.getCollaborators().contains(mProfileService.getCurrent())) {
+            return null;
+        }
+        Branch branch = createBranch(project, parentBranchName, branchName);
+        if (branch != null) {
+            mLogService.createLog("Has created new branch \"" + branchName + "\"",
+                    mProfileService.getCurrent().getId(), project.getId());
+        }
+        return branch;
     }
 
     @Override
@@ -154,17 +171,30 @@ public class CodeServiceImpl implements CodeService {
         if (branch == null) {
             branch = createBranch(project, null, branchName);
         }
-        return branch == null ? null : createCommit(branch, files, message);
+        Commit commit = branch == null ? null : createCommit(branch, files, message);
+        if (commit != null) {
+            mLogService.createLog("Has commited with message \"" + message + "\"",
+                    mProfileService.getCurrent().getId(), project.getId());
+        }
+        return commit;
     }
 
     @Override
     public Commit commit(String profileName, String projectName, String branchName, List<InputFile> files, String message) {
         Project project = mProjectService.getByProfileUsernameAndName(profileName, projectName);
+        if (!project.getCollaborators().contains(mProfileService.getCurrent())) {
+            return null;
+        }
         Branch branch = findBranch(project, branchName);
         if (branch == null) {
             branch = createBranch(project, null, branchName);
         }
-        return branch == null ? null : createCommit(branch, files, message);
+        Commit commit = branch == null ? null : createCommit(branch, files, message);
+        if (commit != null) {
+            mLogService.createLog("Has commited with message \"" + message + "\"",
+                    mProfileService.getCurrent().getId(), project.getId());
+        }
+        return commit;
     }
 
     private Commit createCommit(Branch branch, List<InputFile> files, String message) {

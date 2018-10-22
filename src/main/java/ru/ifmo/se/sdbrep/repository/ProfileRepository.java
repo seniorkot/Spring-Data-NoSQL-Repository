@@ -41,5 +41,6 @@ import java.util.Optional;
 public interface ProfileRepository extends MongoRepository<Profile, String> {
 
     Optional<UserDetails> findByUsername(String username);
+
     Optional<Profile> findByUsernameAndPassword(String username, String password);
 }
