@@ -1,17 +1,17 @@
-# Spring-Data-Repository
-This project uses Spring Data & Spring Security to organize simple service of code storing (like GitHub).
+# Spring-Data-NoSQL-Repository
+This project uses __Spring Data & Spring Security with MongoDB, Apache Cassandra & Neo4j__ to organize simple service of code storing (like GitHub).
 
 ## Before running
-<b>Install:</b>
+__Install:__
 * JRE 8
 * Python v.2.7
 * MongoDB
-* Cassandra
+* Apache Cassandra
 * Neo4j
 
 ## Running
-* Package project into jar file via Maven
-* Run as usual java application
+* Package project into jar file via __Maven__: ```mvn package```
+* Run as usual java application: ```java -jar sdb-rep-1.0.jar```
 
 ## Available features
 * Sign In / Sign Up
